@@ -2,29 +2,8 @@ import { Heart, MessageCircle, Share2, Image as ImageIcon, Video, Link as LinkIc
 import { motion } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 
-interface Post {
-  id: number;
-  author: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
-  date: string;
-  content: string;
-  images?: string[];
-  video?: string;
-  link?: {
-    url: string;
-    title: string;
-    description: string;
-    image: string;
-  };
-  likes: number;
-  comments: number;
-}
-
 export function Blog() {
-  const posts: Post[] = [
+  const posts: GetBlogPost[] = [
     {
       id: 1,
       author: {
@@ -32,7 +11,7 @@ export function Blog() {
         avatar: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=100",
         role: "Les mariés",
       },
-      date: "Il y a 2 jours",
+      createdAt: "Il y a 2 jours",
       content: "Nous sommes si heureux de partager avec vous ces moments précieux de notre préparation au mariage ! 🎉 Merci à tous pour votre soutien et votre amour. 💕",
       images: [
         "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=800",
@@ -48,7 +27,7 @@ export function Blog() {
         avatar: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=100",
         role: "Famille du marié",
       },
-      date: "Il y a 3 jours",
+      createdAt: "Il y a 3 jours",
       content: "Préparatifs de la dote traditionnelle ! Une journée remplie d'émotions et de traditions. 🌍✨",
       images: [
         "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=800",
@@ -63,7 +42,7 @@ export function Blog() {
         avatar: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=100",
         role: "Organisateurs",
       },
-      date: "Il y a 5 jours",
+      createdAt: "Il y a 5 jours",
       content: "Découvrez notre magnifique salle de réception à Japoma Cocotier ! Un lieu magique pour une soirée inoubliable. 🏛️✨",
       link: {
         url: "https://example.com",
@@ -106,15 +85,15 @@ export function Blog() {
               <div className="p-6 flex items-center gap-4">
                 <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
                   <ImageWithFallback
-                    src={post.author.avatar}
-                    alt={post.author.name}
+                    src={post.author?.avatar}
+                    alt={post.author?.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
-                  <h3 className="font-medium text-lg">{post.author.name}</h3>
+                  <h3 className="font-medium text-lg">{post.author?.name}</h3>
                   <p className="text-sm text-gray-500">
-                    {post.author.role} • {post.date}
+                    {post.author?.role} • {post.createdAt}
                   </p>
                 </div>
               </div>

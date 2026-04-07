@@ -1,31 +1,34 @@
 import { useState } from "react";
 import { Search, Users, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+ 
+
+type TableName = "all" | "Miracle" | "Foi" | "Esperance" | "Fidelite" | "Patience" | "Victoire"| "Gloire" | "Misericorde" | "Pardon" | "Justice" | "Paix" | "Priere"| "Espoir" | "Lumiere" | "Amour" | "Benediction" | "Elevation" | "Humilite"| "Abondance" | "Rejouissance" | "Douceur" | "Courage" | "Sagesse" | "Maitrise" | "Grace" | "Intelligence" | "Protection";
 
 interface Guest {
   id: number;
   name: string;
-  table: number;
-  category: "marie" | "mariee" | "vip";
+  table:TableName;
+  category: "marie" | "mariee" | "ami_marie" | "ami_mariee" | "vip";
 }
 
 export function ListeInvites() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTable, setSelectedTable] = useState<number | null>(null);
+  const [selectedTable, setSelectedTable] = useState<TableName | null>(null);
 
   const guests: Guest[] = [
-    { id: 1, name: "Jean-Paul KOUATCHET", table: 1, category: "marie" },
-    { id: 2, name: "Marie KOUATCHET", table: 1, category: "marie" },
-    { id: 3, name: "Pierre ZAMA", table: 2, category: "mariee" },
-    { id: 4, name: "Sophie ZAMA", table: 2, category: "mariee" },
-    { id: 5, name: "Ambassadeur MBARGA", table: 3, category: "vip" },
-    { id: 6, name: "Dr. NKOMO", table: 3, category: "vip" },
-    { id: 7, name: "Emmanuel KOUATCHET", table: 1, category: "marie" },
-    { id: 8, name: "Françoise KOUATCHET", table: 1, category: "marie" },
-    { id: 9, name: "André ZAMA", table: 2, category: "mariee" },
-    { id: 10, name: "Célestine ZAMA", table: 2, category: "mariee" },
-    { id: 11, name: "Ministre FOTSO", table: 3, category: "vip" },
-    { id: 12, name: "Madame FOTSO", table: 3, category: "vip" },
+    { id: 1, name: "Jean-Paul KOUATCHET", table: "Miracle", category: "mariee" },
+    { id: 2, name: "Marie KOUATCHET", table: "Miracle", category: "mariee" },
+    { id: 3, name: "Pierre ZAMA", table: "Esperance", category: "marie" },
+    { id: 4, name: "Sophie ZAMA", table: "Esperance", category: "marie" },
+    { id: 5, name: "Ambassadeur MBARGA", table: "Fidelite" , category: "vip" },
+    { id: 6, name: "Dr. NKOMO", table: "Fidelite" , category: "vip" },
+    { id: 7, name: "Emmanuel KOUATCHET", table: "Miracle", category: "mariee" },
+    { id: 8, name: "Françoise KOUATCHET", table: "Miracle", category: "mariee" },
+    { id: 9, name: "André ZAMA", table: "Esperance", category: "marie" },
+    { id: 10, name: "Célestine ZAMA", table: "Esperance", category: "marie" },
+    { id: 11, name: "Ministre FOTSO", table: "Fidelite" , category: "vip" },
+    { id: 12, name: "Madame FOTSO", table: "Fidelite" , category: "vip" },
   ];
 
   const filteredGuests = guests.filter((guest) =>
@@ -34,15 +37,19 @@ export function ListeInvites() {
 
   const tables = Array.from(new Set(guests.map((g) => g.table))).sort();
 
-  const getGuestsByTable = (tableNumber: number) =>
+  const getGuestsByTable = (tableNumber: TableName) =>
     guests.filter((guest) => guest.table === tableNumber);
 
-  const getCategoryLabel = (category: string) => {
+  const getCategoryLabel = (category: Guest['category']) => {
     switch (category) {
       case "marie":
         return "Famille marié";
       case "mariee":
         return "Famille mariée";
+      case "ami_marie":
+        return "Amis du marié";
+      case "ami_mariee":
+        return "Amies de la mariée";
       case "vip":
         return "VIP";
       default:
@@ -50,12 +57,16 @@ export function ListeInvites() {
     }
   };
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (category: Guest['category']) => {
     switch (category) {
       case "marie":
         return "#033720";
       case "mariee":
         return "#c95103";
+      case "ami_marie":
+        return "#dab24b";
+      case "ami_mariee":
+        return "#cf6112";
       case "vip":
         return "#d8a21e";
       default:

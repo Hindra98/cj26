@@ -1,34 +1,27 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Masonry from "react-responsive-masonry";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 
-type Category = "all" | "dote" | "civil" | "eglise" | "soiree" | "couple" | "famille";
-
-interface Photo {
-  id: number;
-  url: string;
-  category: Category;
-  title: string;
-}
+type Categorie = "all" | Category;
 
 export function Galerie() {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("all");
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Categorie>("all");
+  const [selectedPhoto, setSelectedPhoto] = useState<GetGallery | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const categories = [
-    { id: "all" as Category, label: "Toutes" },
-    { id: "dote" as Category, label: "Dote" },
-    { id: "civil" as Category, label: "Civil" },
-    { id: "eglise" as Category, label: "Église" },
-    { id: "soiree" as Category, label: "Soirée" },
-    { id: "couple" as Category, label: "Couple" },
-    { id: "famille" as Category, label: "Famille" },
+    { id: "all" as Categorie, label: "Toutes" },
+    { id: "dote" as Categorie, label: "Dote" },
+    { id: "civil" as Categorie, label: "Civil" },
+    { id: "eglise" as Categorie, label: "Église" },
+    { id: "soiree" as Categorie, label: "Soirée" },
+    { id: "couple" as Categorie, label: "Couple" },
+    { id: "famille" as Categorie, label: "Famille" },
   ];
 
-  const photos: Photo[] = [
+  const photos: GetGallery[] = [
     { id: 1, url: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=800", category: "dote", title: "Cérémonie traditionnelle" },
     { id: 2, url: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=800", category: "couple", title: "Joël & Claudia" },
     { id: 3, url: "https://images.unsplash.com/photo-1661332517932-2d441bfb2994?w=800", category: "couple", title: "Portraits du couple" },
@@ -45,7 +38,7 @@ export function Galerie() {
     ? photos
     : photos.filter((photo) => photo.category === selectedCategory);
 
-  const handlePhotoClick = (photo: Photo) => {
+  const handlePhotoClick = (photo: GetGallery) => {
     setSelectedPhoto(photo);
     setCurrentIndex(filteredPhotos.findIndex((p) => p.id === photo.id));
   };
@@ -143,7 +136,7 @@ export function Galerie() {
             >
               <button
                 onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                className="absolute cursor-pointer top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
                 <X size={24} color="white" />
               </button>
@@ -153,9 +146,9 @@ export function Galerie() {
                   e.stopPropagation();
                   handlePrev();
                 }}
-                className="absolute left-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                className="absolute cursor-pointer left-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
-                <span className="text-white text-2xl">‹</span>
+                <span className="text-white text-2xl"><ChevronLeft/></span>
               </button>
 
               <button
@@ -163,9 +156,9 @@ export function Galerie() {
                   e.stopPropagation();
                   handleNext();
                 }}
-                className="absolute right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                className="absolute cursor-pointer right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
-                <span className="text-white text-2xl">›</span>
+                <span className="text-white text-2xl"><ChevronRight/></span>
               </button>
 
               <motion.div

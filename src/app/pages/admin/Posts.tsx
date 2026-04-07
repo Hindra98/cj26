@@ -1,22 +1,9 @@
 import { useState } from "react";
-import { Plus, Edit, Trash2, Image as ImageIcon, Video, Link as LinkIcon, X } from "lucide-react";
+import { Plus, Edit, Trash2, Image as ImageIcon, Video, Link as LinkIcon, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-interface Post {
-  id: number;
-  content: string;
-  images: string[];
-  video?: string;
-  link?: {
-    url: string;
-    title: string;
-    description: string;
-  };
-  createdAt: string;
-}
-
 export function AdminPosts() {
-  const [posts, setPosts] = useState<Post[]>([
+  const [posts, setPosts] = useState<GetBlogPost[]>([
     {
       id: 1,
       content: "Nous sommes si heureux de partager avec vous ces moments précieux de notre préparation au mariage ! 🎉",
@@ -25,31 +12,62 @@ export function AdminPosts() {
     },
   ]);
 
+  const defaultBlogPost:BlogPostCommand = {
+      content: "",
+      images: [],
+      author:{
+        name: "Joël & Claudia",
+        role:"Les mariés",
+        avatar: undefined,
+      }
+    };
+
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newPost, setNewPost] = useState({
-    content: "",
-    images: [] as string[],
-    video: "",
-    link: { url: "", title: "", description: "" },
-  });
+    const [blogPostCommand, setBlogPostCommand] = useState<BlogPostCommand>(defaultBlogPost);
+    const [error, setError] = useState("");
 
   const handleCreatePost = () => {
-    const post: Post = {
+    const post: GetBlogPost = {
       id: Date.now(),
-      content: newPost.content,
-      images: newPost.images.filter((img) => img !== ""),
-      video: newPost.video || undefined,
-      link: newPost.link.url ? newPost.link : undefined,
-      createdAt: new Date().toISOString().split("T")[0],
+      content: blogPostCommand.content,
+      images: blogPostCommand.images.map((img) => URL.createObjectURL(img)),
+      createdAt: new Date().toISOString().split("T")[0] + " à " + new Date().toLocaleTimeString(),
     };
     setPosts([post, ...posts]);
-    setNewPost({ content: "", images: [], video: "", link: { url: "", title: "", description: "" } });
     setShowCreateModal(false);
   };
 
   const handleDeletePost = (id: number) => {
     setPosts(posts.filter((post) => post.id !== id));
   };
+  
+  const fileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files
+      ? Array.from(event.target.files)
+      : [];
+    if (selectedFiles.length > 0) {
+      const validFiles = selectedFiles.filter(
+        (file) =>
+          (file.type.includes("image/") || file.type.includes("video/")) &&
+          file.size <= 50 * 1024 * 1024,
+      );
+
+      if (validFiles.length !== selectedFiles.length) {
+        setError(
+          "Certains fichiers ont été rejetés (format non valide ou taille dépassée). Veuillez vérifier votre sélection.",
+        );
+      } else {
+        setError("");
+      }
+      const renamedFiles = validFiles.map((file, idx) => {
+        const ext = file.name.split(".").pop();
+        const name = `Fichier_${new Date().getTime()}.${ext}`;
+        return new File([file], name, { type: file.type });
+      });
+setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
+    }
+  };
+
 
   return (
     <div>
@@ -62,7 +80,7 @@ export function AdminPosts() {
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl text-white transition-all hover:scale-105"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl text-white transition-all hover:scale-105 cursor-pointer"
           style={{ backgroundColor: '#033720' }}
         >
           <Plus size={20} />
@@ -98,9 +116,9 @@ export function AdminPosts() {
               </div>
             </div>
 
-            {post.images.length > 0 && (
+            {post.images && post.images?.length > 0 && (
               <div className="flex gap-2 flex-wrap">
-                {post.images.map((image, idx) => (
+                {post.images?.map((image, idx) => (
                   <img
                     key={idx}
                     src={image}
@@ -155,78 +173,129 @@ export function AdminPosts() {
                 <div>
                   <label className="block mb-2 text-sm font-medium">Message</label>
                   <textarea
-                    value={newPost.content}
-                    onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
+                    value={blogPostCommand.content}
+                    onChange={(e) => {
+                  setBlogPostCommand({ ...blogPostCommand, content: e.target.value })
+                  }}
                     placeholder="Partagez vos pensées..."
                     className="w-full h-32 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors resize-none"
                   />
                 </div>
+                <div>
+                  <label className="mb-2 text-sm font-medium flex items-center gap-2">
+                    <User size={18} />
+                    Auteur
+                  </label>
+                  <div className="flex items-center gap-4 justify-between">
+                    <input
+                      type="text"
+                      value={blogPostCommand.author.name}
+                      placeholder="Nom de l'auteur"
+                      onChange={(e) => 
+                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, name: e.target.value} })
+                      }
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
+                    />
+                    <input
+                      type="text"
+                      value={blogPostCommand.author.role}
+                      placeholder="Role de l'auteur"
+                      onChange={(e) => 
+                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, role: e.target.value} })
+                      }
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
+                    />
+                    <input
+                      type="text"
+                      value={blogPostCommand.author.name}
+                      placeholder="Nom de l'auteur"
+                      onChange={(e) => 
+                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, name: e.target.value} })
+                      }
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
+                    />
+                    <input
+                type="file"
+                name="avatar"
+                onChange={(e) => 
+                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, avatar: e.target.files?.[0]} })
+                      }
+                className="flex-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors cursor-pointer"
+                accept="image/*"
+                capture
+              />
+                  </div>
+                </div>
 
                 {/* Images */}
                 <div>
-                  <label className="block mb-2 text-sm font-medium flex items-center gap-2">
+                  <label className="mb-2 text-sm font-medium flex items-center gap-2">
                     <ImageIcon size={18} />
-                    URLs des images
+                    Photos/Videos
                   </label>
-                  {[0, 1, 2].map((idx) => (
-                    <input
-                      key={idx}
-                      type="text"
-                      value={newPost.images[idx] || ""}
-                      onChange={(e) => {
-                        const images = [...newPost.images];
-                        images[idx] = e.target.value;
-                        setNewPost({ ...newPost, images });
-                      }}
-                      placeholder={`URL image ${idx + 1}`}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
-                    />
-                  ))}
+                  <input
+                type="file"
+                name="files"
+                onChange={fileChanged}
+                className="flex-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors cursor-pointer"
+                accept="image/*, video/*"
+                required
+                capture
+                multiple
+              />
                 </div>
 
-                {/* Video */}
-                <div>
-                  <label className="block mb-2 text-sm font-medium flex items-center gap-2">
-                    <Video size={18} />
-                    URL de la vidéo
-                  </label>
-                  <input
-                    type="text"
-                    value={newPost.video}
-                    onChange={(e) => setNewPost({ ...newPost, video: e.target.value })}
-                    placeholder="URL de la vidéo (YouTube, Vimeo...)"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors"
-                  />
-                </div>
-
-                {/* Link */}
-                <div>
-                  <label className="block mb-2 text-sm font-medium flex items-center gap-2">
-                    <LinkIcon size={18} />
-                    Lien
-                  </label>
-                  <input
-                    type="text"
-                    value={newPost.link.url}
-                    onChange={(e) => setNewPost({ ...newPost, link: { ...newPost.link, url: e.target.value } })}
-                    placeholder="URL du lien"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
-                  />
-                  <input
-                    type="text"
-                    value={newPost.link.title}
-                    onChange={(e) => setNewPost({ ...newPost, link: { ...newPost.link, title: e.target.value } })}
-                    placeholder="Titre du lien"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
-                  />
-                  <input
-                    type="text"
-                    value={newPost.link.description}
-                    onChange={(e) => setNewPost({ ...newPost, link: { ...newPost.link, description: e.target.value } })}
-                    placeholder="Description du lien"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors"
-                  />
-                </div>
+                          {blogPostCommand.images.length > 0 && (
+                            <div className="mt-4 pb-1 border-b border-gray-200">
+                              <p className="text-sm text-gray-500 mb-2 flex items-center gap-4">
+                                <span>Aperçu des photos sélectionnées :</span>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    setBlogPostCommand( defaultBlogPost);
+                                  }}
+                                  className="flex items-center gap-2 p-1 rounded-sm text-white bg-[#033720] transition-all active:scale-90 cursor-pointer hover:bg-[#033720f0]"
+                                >
+                                  <X />
+                                </button>
+                              </p>
+                              <div className="flex gap-4 items-center overflow-x-auto">
+                                {blogPostCommand.images.map((file, idx) => (
+                                  <a
+                                    key={idx}
+                                    href={URL.createObjectURL(file)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {file.type.includes("image/") ? (
+                                      <img
+                                        key={idx}
+                                        src={URL.createObjectURL(file)}
+                                        alt={`Preview ${idx + 1}`}
+                                        className="w-20 h-20 object-cover rounded-md shadow cursor-pointer"
+                                      />
+                                    ) : file.type.includes("video/") ? (
+                                      <video
+                                        width="120"
+                                        height="80"
+                                        controls={false}
+                                        className="rounded-md shadow cursor-pointer h-20 object-cover"
+                                      >
+                                        <source
+                                          src={URL.createObjectURL(file)}
+                                          type={file.type}
+                                        />
+                                        Votre navigateur ne supporte pas la vidéo.
+                                      </video>
+                                    ) : (
+                                      file.name
+                                    )}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-4">

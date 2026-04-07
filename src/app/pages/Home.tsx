@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { JSX, useState } from "react";
 import CountDown from "../components/CountDown";
+import { images } from "../assets";
 interface Highlight{
     title: string;
     description: string;
@@ -115,6 +116,7 @@ export function Home() {
   ];
 
   const [selectedHighlight, setSelectedHighlight] = useState<number>(0);
+  // const img = URL.createObjectURL(images.couple);
 
   return (
     <div className="min-h-screen">
@@ -122,7 +124,8 @@ export function Home() {
       <section
         className="relative h-screen flex items-center justify-center overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, rgba(3, 55, 32, 0.9) 0%, rgba(201, 81, 3, 0.8) 100%), url('https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=1920') center/cover`,
+          background: `linear-gradient(135deg, rgba(3, 55, 32, 0.9) 0%, rgba(201, 81, 3, 0.8) 100%), url('${images.couple}') center/cover`,
+          // background: `linear-gradient(135deg, rgba(3, 55, 32, 0.9) 0%, rgba(201, 81, 3, 0.8) 100%), url('https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=1920') center/cover`,
         }}
       >
         <div className="absolute inset-0 opacity-10">

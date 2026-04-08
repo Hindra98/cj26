@@ -109,10 +109,10 @@ export function Home() {
   ];
 
   const galeriePreview = [
-    "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=800",
-    "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=800",
-    "https://images.unsplash.com/photo-1661332517932-2d441bfb2994?w=800",
-    "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=800",
+    images.couple2,
+    images.otele5,
+    images.claudi3,
+    images.couple,
   ];
 
   const [selectedHighlight, setSelectedHighlight] = useState<number>(0);
@@ -124,8 +124,7 @@ export function Home() {
       <section
         className="relative h-screen flex items-center justify-center overflow-hidden"
         style={{
-          background: `linear-gradient(135deg, rgba(3, 55, 32, 0.9) 0%, rgba(201, 81, 3, 0.8) 100%), url('${images.couple}') center/cover`,
-          // background: `linear-gradient(135deg, rgba(3, 55, 32, 0.9) 0%, rgba(201, 81, 3, 0.8) 100%), url('https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=1920') center/cover`,
+          background: `linear-gradient(135deg, rgba(3, 55, 32, 0.9) 0%, rgba(201, 81, 3, 0.8) 100%), url('${images.couple}') 5%/cover`,
         }}
       >
         <div className="absolute inset-0 opacity-10">

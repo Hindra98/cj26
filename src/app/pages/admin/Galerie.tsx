@@ -2,38 +2,44 @@ import { useState } from "react";
 import { Upload, Trash2, FolderOpen, X } from "lucide-react";
 import { motion } from "motion/react";
 import { Select } from "../../components/figma/Input";
+import { useGallery } from "../../hooks/useGallery";
+import { createGallery, uploadGalleryMedia } from "../../utils/gallery.service";
 
 export function AdminGalerie() {
-  const [photos, setPhotos] = useState<GetGallery[]>([
-    {
-      id: 1,
-      url: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=400",
-      title: "Examples",
-      type: "photo",
-      category: "dote",
-      uploadedAt: "2026-04-01",
-    },
-    {
-      id: 2,
-      url: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=400",
-      title: "Examples",
-      type: "photo",
-      category: "couple",
-      uploadedAt: "2026-04-02",
-    },
-    {
-      id: 3,
-      url: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=400",
-      title: "Examples",
-      type: "photo",
-      category: "soiree",
-      uploadedAt: "2026-04-03",
-    },
-  ]);
+  const [photos, setPhotos] = useState<GetGallery[]>(
+  useGallery()
+  // [
+  //   {
+  //     id: 1,
+  //     url: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=400",
+  //     title: "Examples",
+  //     type: "photo",
+  //     category: "dote",
+  //     uploadedAt: "2026-04-01",
+  //   },
+  //   {
+  //     id: 2,
+  //     url: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=400",
+  //     title: "Examples",
+  //     type: "photo",
+  //     category: "couple",
+  //     uploadedAt: "2026-04-02",
+  //   },
+  //   {
+  //     id: 3,
+  //     url: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=400",
+  //     title: "Examples",
+  //     type: "photo",
+  //     category: "soiree",
+  //     uploadedAt: "2026-04-03",
+  //   },
+  // ]
+);
 
   const [selectedCategory, setSelectedCategory] = useState<Category>("dote");
   const [newPhotoFiles, setNewPhotoFiles] = useState<File[]>([]);
   const [newPhotoTitle, setNewPhotoTitle] = useState("");
+  const [newFileName, setNewFileName] = useState("");
   const [error, setError] = useState("");
 
   const categories: { id: Category; label: string }[] = [
@@ -45,7 +51,7 @@ export function AdminGalerie() {
     { id: "famille", label: "Famille" },
   ];
 
-  const handleUpload = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleUpload = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (newPhotoFiles.length > 0 && newPhotoTitle.trim() !== "") {
       const photo: GetGallery[] = newPhotoFiles.map((file) => ({
@@ -62,6 +68,13 @@ export function AdminGalerie() {
             minute: "2-digit",
           }),
       }));
+      // uploadGalleryMedia(newPhotoFiles[0]);
+      createGallery({
+        url: newFileName,
+        title: photo[0].title,
+        category: photo[0].category,
+        type: photo[0].type || "photo",
+      });
       setPhotos([...photo, ...photos]);
       setNewPhotoFiles([]);
       setNewPhotoTitle("");
@@ -70,7 +83,7 @@ export function AdminGalerie() {
       setError("Veuillez remplir tous les champs.");
     }
   };
-  const fileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const fileChanged = async(event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files
       ? Array.from(event.target.files)
       : [];
@@ -93,6 +106,8 @@ export function AdminGalerie() {
         const name = `Fichier_${new Date().getTime()}.${ext}`;
         return new File([file], name, { type: file.type });
       });
+      const t = await uploadGalleryMedia(renamedFiles[0]);
+      setNewFileName(t)
 
       setNewPhotoFiles(renamedFiles);
     }
@@ -110,6 +125,9 @@ export function AdminGalerie() {
     },
     {} as Record<Category, GetGallery[]>,
   );
+  const gal = useGallery();
+
+  console.log("gal: ", gal);
 
   return (
     <div>
@@ -118,7 +136,7 @@ export function AdminGalerie() {
           className="text-4xl mb-2"
           style={{ fontFamily: "'Playfair Display', serif", color: "#033720" }}
         >
-          Gestion de la Galerie
+          Gestion de la Galerie {newFileName}
         </h1>
         <p className="text-gray-600">Ajoutez et organisez vos photos</p>
       </div>

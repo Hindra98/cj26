@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Search, Users, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
- 
 
-type TableName = "all" | "Miracle" | "Foi" | "Esperance" | "Fidelite" | "Patience" | "Victoire"| "Gloire" | "Misericorde" | "Pardon" | "Justice" | "Paix" | "Priere"| "Espoir" | "Lumiere" | "Amour" | "Benediction" | "Elevation" | "Humilite"| "Abondance" | "Rejouissance" | "Douceur" | "Courage" | "Sagesse" | "Maitrise" | "Grace" | "Intelligence" | "Protection";
+// type TableName = "all" | TableName;
 
 interface Guest {
   id: number;
   name: string;
-  table:TableName;
+  table: TableName;
   category: "marie" | "mariee" | "ami_marie" | "ami_mariee" | "vip";
 }
 
@@ -17,30 +16,67 @@ export function ListeInvites() {
   const [selectedTable, setSelectedTable] = useState<TableName | null>(null);
 
   const guests: Guest[] = [
-    { id: 1, name: "Jean-Paul KOUATCHET", table: "Miracle", category: "mariee" },
+    {
+      id: 1,
+      name: "Jean-Paul KOUATCHET",
+      table: "Miracle",
+      category: "mariee",
+    },
     { id: 2, name: "Marie KOUATCHET", table: "Miracle", category: "mariee" },
     { id: 3, name: "Pierre ZAMA", table: "Esperance", category: "marie" },
     { id: 4, name: "Sophie ZAMA", table: "Esperance", category: "marie" },
-    { id: 5, name: "Ambassadeur MBARGA", table: "Fidelite" , category: "vip" },
-    { id: 6, name: "Dr. NKOMO", table: "Fidelite" , category: "vip" },
+    { id: 5, name: "Ambassadeur MBARGA", table: "Fidelite", category: "vip" },
+    { id: 6, name: "Dr. NKOMO", table: "Fidelite", category: "vip" },
     { id: 7, name: "Emmanuel KOUATCHET", table: "Miracle", category: "mariee" },
-    { id: 8, name: "Françoise KOUATCHET", table: "Miracle", category: "mariee" },
+    {
+      id: 8,
+      name: "Françoise KOUATCHET",
+      table: "Miracle",
+      category: "mariee",
+    },
     { id: 9, name: "André ZAMA", table: "Esperance", category: "marie" },
     { id: 10, name: "Célestine ZAMA", table: "Esperance", category: "marie" },
-    { id: 11, name: "Ministre FOTSO", table: "Fidelite" , category: "vip" },
-    { id: 12, name: "Madame FOTSO", table: "Fidelite" , category: "vip" },
+    { id: 11, name: "Ministre FOTSO", table: "Fidelite", category: "vip" },
+    { id: 12, name: "Madame FOTSO", table: "Fidelite", category: "vip" },
   ];
 
   const filteredGuests = guests.filter((guest) =>
-    guest.name.toLowerCase().includes(searchTerm.toLowerCase())
+    guest.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const tables = Array.from(new Set(guests.map((g) => g.table))).sort();
+  const tables: TableName[] = [
+    "Abondance",
+    "Amour",
+    "Benediction",
+    "Courage",
+    "Douceur",
+    "Elevation",
+    "Esperance",
+    "Espoir",
+    "Fidelite",
+    "Foi",
+    "Gloire",
+    "Grace",
+    "Humilite",
+    "Intelligence",
+    "Justice",
+    "Maitrise",
+    "Miracle",
+    "Pardon",
+    "Patience",
+    "Paix",
+    "Priere",
+    "Protection",
+    "Rejouissance",
+    "Sagesse",
+    "Victoire",
+    "Lumiere","Misericorde"
+  ];
 
   const getGuestsByTable = (tableNumber: TableName) =>
     guests.filter((guest) => guest.table === tableNumber);
 
-  const getCategoryLabel = (category: Guest['category']) => {
+  const getCategoryLabel = (category: Guest["category"]) => {
     switch (category) {
       case "marie":
         return "Famille marié";
@@ -57,7 +93,7 @@ export function ListeInvites() {
     }
   };
 
-  const getCategoryColor = (category: Guest['category']) => {
+  const getCategoryColor = (category: Guest["category"]) => {
     switch (category) {
       case "marie":
         return "#033720";
@@ -84,7 +120,13 @@ export function ListeInvites() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl mb-4" style={{ fontFamily: "'Playfair Display', serif", color: '#033720' }}>
+          <h1
+            className="text-6xl mb-4"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: "#033720",
+            }}
+          >
             Liste des Invités
           </h1>
           <p className="text-xl text-gray-600">Plan de table</p>
@@ -98,7 +140,10 @@ export function ListeInvites() {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              size={20}
+            />
             <input
               type="text"
               placeholder="Rechercher un invité..."
@@ -132,17 +177,24 @@ export function ListeInvites() {
                   <div className="flex items-center gap-3 mb-4">
                     <div
                       className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: '#033720' }}
+                      style={{ backgroundColor: "#033720" }}
                     >
                       <Users size={24} color="white" />
                     </div>
-                    <h3 className="text-2xl" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    <h3
+                      className="text-2xl"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
                       Table {tableNumber}
                     </h3>
                   </div>
-                  <p className="text-gray-600 mb-4">{tableGuests.length} invités</p>
+                  <p className="text-gray-600 mb-4">
+                    {tableGuests.length} invités
+                  </p>
                   <div className="flex flex-wrap gap-2">
-                    {Array.from(new Set(tableGuests.map((g) => g.category))).map((cat) => (
+                    {Array.from(
+                      new Set(tableGuests.map((g) => g.category)),
+                    ).map((cat) => (
                       <span
                         key={cat}
                         className="px-3 py-1 rounded-full text-xs text-white"
@@ -163,7 +215,10 @@ export function ListeInvites() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
-            <h3 className="text-2xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <h3
+              className="text-2xl mb-4"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
               Résultats de recherche ({filteredGuests.length})
             </h3>
             <div className="space-y-3">
@@ -178,7 +233,9 @@ export function ListeInvites() {
                   </div>
                   <span
                     className="px-3 py-1 rounded-full text-xs text-white"
-                    style={{ backgroundColor: getCategoryColor(guest.category) }}
+                    style={{
+                      backgroundColor: getCategoryColor(guest.category),
+                    }}
                   >
                     {getCategoryLabel(guest.category)}
                   </span>
@@ -206,7 +263,13 @@ export function ListeInvites() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-3xl" style={{ fontFamily: "'Playfair Display', serif", color: '#033720' }}>
+                  <h3
+                    className="text-3xl"
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      color: "#033720",
+                    }}
+                  >
                     Table {selectedTable}
                   </h3>
                   <button
@@ -218,7 +281,9 @@ export function ListeInvites() {
                 </div>
 
                 <div className="space-y-3">
-                  {getGuestsByTable(selectedTable).map((guest, index) => (
+                  {getGuestsByTable(selectedTable).length === 0 ? (
+                    <p className="text-gray-600">Aucun invité à cette table.</p>
+                  ) : getGuestsByTable(selectedTable).map((guest, index) => (
                     <motion.div
                       key={guest.id}
                       className="p-4 rounded-xl border border-gray-100 bg-gray-50"
@@ -230,7 +295,9 @@ export function ListeInvites() {
                         <p className="font-medium">{guest.name}</p>
                         <span
                           className="px-3 py-1 rounded-full text-xs text-white"
-                          style={{ backgroundColor: getCategoryColor(guest.category) }}
+                          style={{
+                            backgroundColor: getCategoryColor(guest.category),
+                          }}
                         >
                           {getCategoryLabel(guest.category)}
                         </span>

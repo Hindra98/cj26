@@ -1,8 +1,36 @@
-
 type Category = "dote" | "civil" | "eglise" | "soiree" | "couple" | "famille";
 
+type TableName =
+  | "Miracle"
+  | "Foi"
+  | "Esperance"
+  | "Fidelite"
+  | "Patience"
+  | "Victoire"
+  | "Gloire"
+  | "Misericorde"
+  | "Pardon"
+  | "Justice"
+  | "Paix"
+  | "Priere"
+  | "Espoir"
+  | "Lumiere"
+  | "Amour"
+  | "Benediction"
+  | "Elevation"
+  | "Humilite"
+  | "Abondance"
+  | "Rejouissance"
+  | "Douceur"
+  | "Courage"
+  | "Sagesse"
+  | "Maitrise"
+  | "Grace"
+  | "Intelligence"
+  | "Protection";
+
 interface GalleryCommand {
-  id: number;
+  id?: number;
   url: string;
   category: Category;
   title: string;
@@ -15,7 +43,7 @@ interface GetGallery {
   url: string;
   category: Category;
   title: string;
-  type: "photo" | "video";
+  type?: "photo" | "video";
   uploadedAt?: string;
 }
 
@@ -47,5 +75,15 @@ interface GetBlogPost {
   };
   likes?: number;
   comments?: number;
+  createdAt: string;
+}
+interface GetPostDb {
+  id: number;
+  content: string;
+  images?: string[];
+  type?: "photo" | "video";
+  author_name: string;
+  author_avatar: string;
+  author_role: string;
   createdAt: string;
 }

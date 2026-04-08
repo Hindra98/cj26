@@ -1,5 +1,6 @@
 import { Calendar, MapPin, Church, Music } from "lucide-react";
 import { motion } from "motion/react";
+import { images } from "../assets";
 
 export function Programme() {
   const events = [
@@ -11,7 +12,7 @@ export function Programme() {
       location: null,
       icon: Calendar,
       color: "#c95103",
-      image: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=800",
+      image: images.miff_homme2,
     },
   ];
 
@@ -24,7 +25,7 @@ export function Programme() {
       sublocation: "Suivi d'un cocktail",
       icon: Calendar,
       color: "#033720",
-      image: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=800",
+      image: images.couple3,
     },
     {
       time: "14h30",
@@ -34,7 +35,7 @@ export function Programme() {
       sublocation: "À Ange Raphael",
       icon: Church,
       color: "#cf6112",
-      image: "https://images.unsplash.com/photo-1661332517932-2d441bfb2994?w=800",
+      image: images.couple,
     },
     {
       time: "20h00",
@@ -44,7 +45,7 @@ export function Programme() {
       sublocation: "Face école primaire Duchesne",
       icon: Music,
       color: "#d8a21e",
-      image: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=800",
+      image: images.miff_homme,
     },
   ];
 

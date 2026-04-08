@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Masonry from "react-responsive-masonry";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { images } from "../assets";
+import { useGallery } from "../hooks/useGallery";
 
 type Categorie = "all" | Category;
 
@@ -21,22 +23,63 @@ export function Galerie() {
     { id: "famille" as Categorie, label: "Famille" },
   ];
 
-  const photos: GetGallery[] = [
-    { id: 1, url: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=800", category: "dote", title: "Cérémonie traditionnelle" },
-    { id: 2, url: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=800", category: "couple", title: "Joël & Claudia" },
-    { id: 3, url: "https://images.unsplash.com/photo-1661332517932-2d441bfb2994?w=800", category: "couple", title: "Portraits du couple" },
-    { id: 4, url: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=800", category: "famille", title: "Famille réunie" },
-    { id: 5, url: "https://images.unsplash.com/photo-1763368160924-abab3611ea3e?w=800", category: "dote", title: "Tenue traditionnelle" },
-    { id: 6, url: "https://images.unsplash.com/photo-1660675133902-acd1b057f75d?w=800", category: "famille", title: "Famille KOUATCHET" },
-    { id: 7, url: "https://images.unsplash.com/photo-1707096356962-beca7eebaeb4?w=800", category: "couple", title: "Moment complice" },
-    { id: 8, url: "https://images.unsplash.com/photo-1769451742168-7683113b46a8?w=800", category: "famille", title: "Famille ZAMA" },
-    { id: 9, url: "https://images.unsplash.com/photo-1766407354000-54a7129f7140?w=800", category: "soiree", title: "Ambiance festive" },
-    { id: 10, url: "https://images.unsplash.com/photo-1767293940906-6aa1c13b514b?w=800", category: "soiree", title: "Musique et danse" },
+  const photos: GetGallery[] = useGallery() || [
+    {
+      id: 1,
+      url: images.village,
+      category: "dote",
+      title: "Cérémonie traditionnelle",
+    },
+    { id: 2, url: images.couple3, category: "couple", title: "Joël & Claudia" },
+    {
+      id: 3,
+      url: images.couple2,
+      category: "couple",
+      title: "Portraits du couple",
+    },
+    {
+      id: 4,
+      url: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=800",
+      category: "famille",
+      title: "Famille réunie",
+    },
+    {
+      id: 5,
+      url: "https://images.unsplash.com/photo-1763368160924-abab3611ea3e?w=800",
+      category: "dote",
+      title: "Tenue traditionnelle",
+    },
+    {
+      id: 6,
+      url: images.miff_femme2,
+      category: "famille",
+      title: "Famille KOUATCHET",
+    },
+    { id: 7, url: images.couple, category: "couple", title: "Moment complice" },
+    {
+      id: 8,
+      url: images.miff_homme,
+      category: "famille",
+      title: "Famille ZAMA",
+    },
+    {
+      id: 9,
+      url: images.claudi4,
+      category: "soiree",
+      title: "Ambiance festive",
+    },
+    {
+      id: 10,
+      url: images.otele3,
+      category: "soiree",
+      title: "Musique et danse",
+    },
   ];
 
-  const filteredPhotos = selectedCategory === "all"
-    ? photos
-    : photos.filter((photo) => photo.category === selectedCategory);
+  const filteredPhotos =
+    selectedCategory === "all"
+      ? photos
+      : photos.filter((photo) => photo.category === selectedCategory);
 
   const handlePhotoClick = (photo: GetGallery) => {
     setSelectedPhoto(photo);
@@ -50,11 +93,11 @@ export function Galerie() {
   };
 
   const handlePrev = () => {
-    const prevIndex = (currentIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
+    const prevIndex =
+      (currentIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
     setCurrentIndex(prevIndex);
     setSelectedPhoto(filteredPhotos[prevIndex]);
   };
-
   return (
     <div className="min-h-screen py-20 px-4">
       <div className="max-w-7xl mx-auto">
@@ -65,7 +108,13 @@ export function Galerie() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl mb-4" style={{ fontFamily: "'Playfair Display', serif", color: '#033720' }}>
+          <h1
+            className="text-6xl mb-4"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: "#033720",
+            }}
+          >
             Galerie Photos
           </h1>
           <p className="text-xl text-gray-600">Nos plus beaux moments</p>
@@ -85,9 +134,13 @@ export function Galerie() {
               className={`px-6 py-3 rounded-full transition-all ${
                 selectedCategory === category.id
                   ? "text-white shadow-lg scale-105"
-                  : "bg-white text-gray-700 border border-gray-200 hover:border-[#d8a21e]"
+                  : "bg-white text-gray-700 border border-gray-200 hover:border-[#d8a21e] cursor-pointer"
               }`}
-              style={selectedCategory === category.id ? { backgroundColor: '#033720' } : {}}
+              style={
+                selectedCategory === category.id
+                  ? { backgroundColor: "#033720" }
+                  : {}
+              }
             >
               {category.label}
             </button>
@@ -148,7 +201,9 @@ export function Galerie() {
                 }}
                 className="absolute cursor-pointer left-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
-                <span className="text-white text-2xl"><ChevronLeft/></span>
+                <span className="text-white text-2xl">
+                  <ChevronLeft />
+                </span>
               </button>
 
               <button
@@ -158,11 +213,13 @@ export function Galerie() {
                 }}
                 className="absolute cursor-pointer right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
-                <span className="text-white text-2xl"><ChevronRight/></span>
+                <span className="text-white text-2xl">
+                  <ChevronRight />
+                </span>
               </button>
 
               <motion.div
-                className="max-w-5xl max-h-[90vh] w-full"
+                className="max-w-5xl max-h-[90vh] w-auto flex flex-col items-center"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
@@ -171,9 +228,11 @@ export function Galerie() {
                 <img
                   src={selectedPhoto.url}
                   alt={selectedPhoto.title}
-                  className="w-full h-auto rounded-2xl"
+                  className="w-auto h-full max-h-[80vh] rounded-2xl"
                 />
-                <p className="text-white text-center mt-4 text-xl">{selectedPhoto.title}</p>
+                <p className="text-white text-center mt-4 text-xl">
+                  {selectedPhoto.title}
+                </p>
                 <p className="text-gray-400 text-center mt-2">
                   {currentIndex + 1} / {filteredPhotos.length}
                 </p>

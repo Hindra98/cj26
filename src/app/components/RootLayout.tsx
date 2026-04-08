@@ -1,6 +1,8 @@
 import { Outlet, Link, useLocation } from "react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { CJ_THEME } from "../utils/constants";
+import { ModeSelector } from "./figma/Input";
 
 export function RootLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,7 +17,6 @@ export function RootLayout() {
   ];
 
   const isActive = (href: string) => location.pathname === href;
-
   return (
     <div className="min-h-screen bg-white">
       <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
@@ -48,6 +49,7 @@ export function RootLayout() {
               >
                 Admin
               </Link>
+              {/* <ModeSelector className="mode" /> */}
             </div>
 
             <button

@@ -1,37 +1,84 @@
 import { useState } from "react";
-import { Plus, Edit, Trash2, Image as ImageIcon, Video, Link as LinkIcon, X, User } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Image as ImageIcon,
+  Video,
+  Link as LinkIcon,
+  X,
+  User,
+} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { images } from "../../assets";
+import { Select } from "../../components/figma/Input";
 
 export function AdminPosts() {
-  const [posts, setPosts] = useState<GetBlogPost[]>([
+  const [posts, setPosts] = useState<GetPostDb[]>([
     {
       id: 1,
-      content: "Nous sommes si heureux de partager avec vous ces moments précieux de notre préparation au mariage ! 🎉",
-      images: ["https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=400"],
+      content:
+        "Nous sommes si heureux de partager avec vous ces moments précieux de notre préparation au mariage ! 🎉",
+      images: [images.couple, images.couple3],
       createdAt: "2026-04-04",
+      author_name: "Joël & Claudia",
+      author_avatar: images.couple,
+      author_role: "Les mariés",
     },
   ]);
 
-  const defaultBlogPost:BlogPostCommand = {
-      content: "",
-      images: [],
-      author:{
-        name: "Joël & Claudia",
-        role:"Les mariés",
-        avatar: undefined,
-      }
-    };
+  const authors = [
+    {
+      name: "Joël & Claudia",
+      role: "Les mariés",
+      avatar: images.couple,
+    },
+    {
+      name: "Famille KOUATCHET",
+      role: "Famille de la mariée",
+      avatar: images.miff_femme2,
+    },
+    {
+      name: "Famille ZAMA",
+      role: "Famille du marié",
+      avatar: images.miff_homme,
+    },
+    {
+      name: "Organisation Mariage",
+      role: "Organisateurs",
+      avatar: images.couple2,
+    },
+  ];
+
+  const defaultBlogPost: BlogPostCommand = {
+    content: "",
+    images: [],
+    author: {
+      name: authors[0].name,
+      role: authors[0].role,
+      avatar: undefined,
+    },
+  };
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-    const [blogPostCommand, setBlogPostCommand] = useState<BlogPostCommand>(defaultBlogPost);
-    const [error, setError] = useState("");
+  const [blogPostCommand, setBlogPostCommand] =
+    useState<BlogPostCommand>(defaultBlogPost);
+  const [error, setError] = useState("");
 
   const handleCreatePost = () => {
-    const post: GetBlogPost = {
+    const post: GetPostDb = {
       id: Date.now(),
       content: blogPostCommand.content,
+      author_name: blogPostCommand.author.name,
+      author_role: blogPostCommand.author.role,
+      author_avatar: authors.find(
+        (aut) => aut.name === blogPostCommand.author.name,
+      )?.avatar,
       images: blogPostCommand.images.map((img) => URL.createObjectURL(img)),
-      createdAt: new Date().toISOString().split("T")[0] + " à " + new Date().toLocaleTimeString(),
+      createdAt:
+        new Date().toISOString().split("T")[0] +
+        " à " +
+        new Date().toLocaleTimeString(),
     };
     setPosts([post, ...posts]);
     setShowCreateModal(false);
@@ -40,7 +87,7 @@ export function AdminPosts() {
   const handleDeletePost = (id: number) => {
     setPosts(posts.filter((post) => post.id !== id));
   };
-  
+
   const fileChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files
       ? Array.from(event.target.files)
@@ -64,16 +111,21 @@ export function AdminPosts() {
         const name = `Fichier_${new Date().getTime()}.${ext}`;
         return new File([file], name, { type: file.type });
       });
-setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
+      setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
     }
   };
-
 
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl mb-2" style={{ fontFamily: "'Playfair Display', serif", color: '#033720' }}>
+          <h1
+            className="text-4xl mb-2"
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              color: "#033720",
+            }}
+          >
             Gestion des Posts
           </h1>
           <p className="text-gray-600">Créez et gérez vos publications</p>
@@ -81,7 +133,7 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
         <button
           onClick={() => setShowCreateModal(true)}
           className="flex items-center gap-2 px-6 py-3 rounded-xl text-white transition-all hover:scale-105 cursor-pointer"
-          style={{ backgroundColor: '#033720' }}
+          style={{ backgroundColor: "#033720" }}
         >
           <Plus size={20} />
           Nouveau post
@@ -101,7 +153,9 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <p className="text-gray-800 mb-2">{post.content}</p>
-                <p className="text-sm text-gray-500">Publié le {post.createdAt}</p>
+                <p className="text-sm text-gray-500">
+                  Publié le {post.createdAt}
+                </p>
               </div>
               <div className="flex gap-2">
                 <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
@@ -128,13 +182,6 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
                 ))}
               </div>
             )}
-
-            {post.link && (
-              <div className="mt-3 p-3 border border-gray-200 rounded-lg">
-                <p className="text-sm font-medium">{post.link.title}</p>
-                <p className="text-xs text-gray-500">{post.link.url}</p>
-              </div>
-            )}
           </motion.div>
         ))}
       </div>
@@ -157,7 +204,13 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-3xl" style={{ fontFamily: "'Playfair Display', serif", color: '#033720' }}>
+                <h2
+                  className="text-3xl"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    color: "#033720",
+                  }}
+                >
                   Créer un post
                 </h2>
                 <button
@@ -171,12 +224,17 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
               <div className="space-y-6">
                 {/* Content */}
                 <div>
-                  <label className="block mb-2 text-sm font-medium">Message</label>
+                  <label className="block mb-2 text-sm font-medium">
+                    Message
+                  </label>
                   <textarea
                     value={blogPostCommand.content}
                     onChange={(e) => {
-                  setBlogPostCommand({ ...blogPostCommand, content: e.target.value })
-                  }}
+                      setBlogPostCommand({
+                        ...blogPostCommand,
+                        content: e.target.value,
+                      });
+                    }}
                     placeholder="Partagez vos pensées..."
                     className="w-full h-32 px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors resize-none"
                   />
@@ -186,45 +244,28 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
                     <User size={18} />
                     Auteur
                   </label>
-                  <div className="flex items-center gap-4 justify-between">
-                    <input
-                      type="text"
-                      value={blogPostCommand.author.name}
-                      placeholder="Nom de l'auteur"
-                      onChange={(e) => 
-                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, name: e.target.value} })
-                      }
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
-                    />
-                    <input
-                      type="text"
-                      value={blogPostCommand.author.role}
-                      placeholder="Role de l'auteur"
-                      onChange={(e) => 
-                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, role: e.target.value} })
-                      }
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
-                    />
-                    <input
-                      type="text"
-                      value={blogPostCommand.author.name}
-                      placeholder="Nom de l'auteur"
-                      onChange={(e) => 
-                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, name: e.target.value} })
-                      }
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors mb-2"
-                    />
-                    <input
-                type="file"
-                name="avatar"
-                onChange={(e) => 
-                        setBlogPostCommand({...blogPostCommand, author:{...blogPostCommand.author, avatar: e.target.files?.[0]} })
-                      }
-                className="flex-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors cursor-pointer"
-                accept="image/*"
-                capture
-              />
-                  </div>
+
+                  <Select
+                    name="authors"
+                    className=""
+                    title="Selectionner l'auteur du post"
+                    items={authors.map((aut) => ({
+                      name: aut.role,
+                      value: aut.role,
+                    }))}
+                    onChange={(e) => {
+                      setBlogPostCommand({
+                        ...blogPostCommand,
+                        author: {
+                          ...blogPostCommand.author,
+                          role: e.target.value,
+                          name:
+                            authors.find((aut) => aut.role === e.target.value)
+                              ?.name || "",
+                        },
+                      });
+                    }}
+                  />
                 </div>
 
                 {/* Images */}
@@ -234,68 +275,68 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
                     Photos/Videos
                   </label>
                   <input
-                type="file"
-                name="files"
-                onChange={fileChanged}
-                className="flex-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors cursor-pointer"
-                accept="image/*, video/*"
-                required
-                capture
-                multiple
-              />
+                    type="file"
+                    name="files"
+                    onChange={fileChanged}
+                    className="flex-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-[#033720] transition-colors cursor-pointer"
+                    accept="image/*, video/*"
+                    required
+                    capture
+                    multiple
+                  />
                 </div>
 
-                          {blogPostCommand.images.length > 0 && (
-                            <div className="mt-4 pb-1 border-b border-gray-200">
-                              <p className="text-sm text-gray-500 mb-2 flex items-center gap-4">
-                                <span>Aperçu des photos sélectionnées :</span>
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    setBlogPostCommand( defaultBlogPost);
-                                  }}
-                                  className="flex items-center gap-2 p-1 rounded-sm text-white bg-[#033720] transition-all active:scale-90 cursor-pointer hover:bg-[#033720f0]"
-                                >
-                                  <X />
-                                </button>
-                              </p>
-                              <div className="flex gap-4 items-center overflow-x-auto">
-                                {blogPostCommand.images.map((file, idx) => (
-                                  <a
-                                    key={idx}
-                                    href={URL.createObjectURL(file)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    {file.type.includes("image/") ? (
-                                      <img
-                                        key={idx}
-                                        src={URL.createObjectURL(file)}
-                                        alt={`Preview ${idx + 1}`}
-                                        className="w-20 h-20 object-cover rounded-md shadow cursor-pointer"
-                                      />
-                                    ) : file.type.includes("video/") ? (
-                                      <video
-                                        width="120"
-                                        height="80"
-                                        controls={false}
-                                        className="rounded-md shadow cursor-pointer h-20 object-cover"
-                                      >
-                                        <source
-                                          src={URL.createObjectURL(file)}
-                                          type={file.type}
-                                        />
-                                        Votre navigateur ne supporte pas la vidéo.
-                                      </video>
-                                    ) : (
-                                      file.name
-                                    )}
-                                  </a>
-                                ))}
-                              </div>
-                            </div>
+                {blogPostCommand.images.length > 0 && (
+                  <div className="mt-4 pb-1 border-b border-gray-200">
+                    <p className="text-sm text-gray-500 mb-2 flex items-center gap-4">
+                      <span>Aperçu des photos sélectionnées :</span>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setBlogPostCommand(defaultBlogPost);
+                        }}
+                        className="flex items-center gap-2 p-1 rounded-sm text-white bg-[#033720] transition-all active:scale-90 cursor-pointer hover:bg-[#033720f0]"
+                      >
+                        <X />
+                      </button>
+                    </p>
+                    <div className="flex gap-4 items-center overflow-x-auto">
+                      {blogPostCommand.images.map((file, idx) => (
+                        <a
+                          key={idx}
+                          href={URL.createObjectURL(file)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {file.type.includes("image/") ? (
+                            <img
+                              key={idx}
+                              src={URL.createObjectURL(file)}
+                              alt={`Preview ${idx + 1}`}
+                              className="w-20 h-20 object-cover rounded-md shadow cursor-pointer"
+                            />
+                          ) : file.type.includes("video/") ? (
+                            <video
+                              width="120"
+                              height="80"
+                              controls={false}
+                              className="rounded-md shadow cursor-pointer h-20 object-cover"
+                            >
+                              <source
+                                src={URL.createObjectURL(file)}
+                                type={file.type}
+                              />
+                              Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                          ) : (
+                            file.name
                           )}
-                          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-4">
@@ -308,7 +349,7 @@ setBlogPostCommand({ ...blogPostCommand, images: renamedFiles });
                   <button
                     onClick={handleCreatePost}
                     className="flex-1 px-6 py-3 rounded-xl text-white transition-all hover:scale-105"
-                    style={{ backgroundColor: '#033720' }}
+                    style={{ backgroundColor: "#033720" }}
                   >
                     Publier
                   </button>

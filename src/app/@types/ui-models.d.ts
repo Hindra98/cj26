@@ -1,3 +1,4 @@
+type Theme = "light" | "dark" | "system" | "default";
 
 interface SelectProps {
   items: SelectItemsProps[];

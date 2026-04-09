@@ -44,46 +44,33 @@ interface GetGallery {
   category: Category;
   title: string;
   type?: "photo" | "video";
-  uploadedAt?: string;
+  uploaded_at: string;
 }
 
 interface BlogPostCommand {
+  id?: number;
   content: string;
   images: File[];
-  author: {
-    name: string;
-    avatar?: File;
-    role: string;
-  };
-}
-
-interface GetBlogPost {
-  id: number;
-  content: string;
-  images?: string[];
-  video?: string;
-  link?: {
-    url: string;
-    title: string;
-    description: string;
-    image?: string;
-  };
-  author?: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
-  likes?: number;
-  comments?: number;
-  createdAt: string;
-}
-interface GetPostDb {
-  id: number;
-  content: string;
-  images?: string[];
-  type?: "photo" | "video";
+  
   author_name: string;
   author_avatar: string;
   author_role: string;
-  createdAt: string;
+  created_at?: string;
+  blog_images?:   BlogImage[];
+}
+
+interface GetPostDb {
+  id: number;
+  content: string;
+  author_name: string;
+  author_avatar: string;
+  author_role: string;
+  created_at: string;
+  blog_images:   BlogImage[];
+}
+interface BlogImage {
+  id?:      number;
+  url:     string;
+  post_id?: number;
+  type?: "photo" | "video";
 }

@@ -17,3 +17,8 @@ export const uploadImage = async (file: File, type: "posts" | "gallery") => {
 
   return publicUrl.publicUrl;
 };
+
+export const formatDate = (date:string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+  return new Date(date).toLocaleDateString(undefined, options);
+}

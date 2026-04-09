@@ -1,23 +1,58 @@
 import { useEffect, useState } from "react";
-import { getGallery } from "../utils/gallery.service";
-import { getPosts } from "../utils/blog.service";
+import { supabase } from "../utils/supabase";
 
 export const useGallery = () => {
-  const [data, setData] = useState<GetGallery[]>([]);
+  const [datas, setData] = useState<GetGallery[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("gallery")
+        .select(`*`)
+        .order("uploaded_at", { ascending: false });
+      if (error) throw error;
+      setData((data as GetGallery[]) || []);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    getGallery().then(setData);
+    fetchPosts();
   }, []);
 
-  return data;
+  return { data: datas, loading, error, refetch: fetchPosts };
 };
 
 export const useBlogPost = () => {
-  const [data, setData] = useState<GetPostDb[]>([]);
+  const [datas, setData] = useState<GetPostDb[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(`*, blog_images(*)`)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setData((data as GetPostDb[]) || []);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    getPosts().then(setData);
+    fetchPosts();
   }, []);
 
-  return data;
+  return { data: datas, loading, error, refetch: fetchPosts };
 };

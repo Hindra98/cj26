@@ -1,45 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Upload, Trash2, FolderOpen, X } from "lucide-react";
 import { motion } from "motion/react";
 import { Select } from "../../components/figma/Input";
 import { useGallery } from "../../hooks/useGallery";
-import { createGallery, uploadGalleryMedia } from "../../utils/gallery.service";
+import {
+  deleteGallery,
+  uploadGalleryImages,
+} from "../../utils/gallery.service";
+import { formatDate } from "../../utils/wedding.func";
 
 export function AdminGalerie() {
-  const [photos, setPhotos] = useState<GetGallery[]>(
-  useGallery()
-  // [
-  //   {
-  //     id: 1,
-  //     url: "https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=400",
-  //     title: "Examples",
-  //     type: "photo",
-  //     category: "dote",
-  //     uploadedAt: "2026-04-01",
-  //   },
-  //   {
-  //     id: 2,
-  //     url: "https://images.unsplash.com/photo-1661332306744-70f9ed1a7f40?w=400",
-  //     title: "Examples",
-  //     type: "photo",
-  //     category: "couple",
-  //     uploadedAt: "2026-04-02",
-  //   },
-  //   {
-  //     id: 3,
-  //     url: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=400",
-  //     title: "Examples",
-  //     type: "photo",
-  //     category: "soiree",
-  //     uploadedAt: "2026-04-03",
-  //   },
-  // ]
-);
+  const {
+    data: dataGallery,
+    loading,
+    error: dataError,
+    refetch,
+  } = useGallery();
+  const [photos, setPhotos] = useState<GetGallery[]>([]);
 
   const [selectedCategory, setSelectedCategory] = useState<Category>("dote");
   const [newPhotoFiles, setNewPhotoFiles] = useState<File[]>([]);
   const [newPhotoTitle, setNewPhotoTitle] = useState("");
-  const [newFileName, setNewFileName] = useState("");
   const [error, setError] = useState("");
 
   const categories: { id: Category; label: string }[] = [
@@ -51,7 +32,9 @@ export function AdminGalerie() {
     { id: "famille", label: "Famille" },
   ];
 
-  const handleUpload = async(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleUpload = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     e.preventDefault();
     if (newPhotoFiles.length > 0 && newPhotoTitle.trim() !== "") {
       const photo: GetGallery[] = newPhotoFiles.map((file) => ({
@@ -60,7 +43,7 @@ export function AdminGalerie() {
         category: selectedCategory,
         title: newPhotoTitle.trim() || "Nouvelle photo",
         type: file.type.includes("video/") ? "video" : "photo",
-        uploadedAt:
+        uploaded_at:
           new Date().toISOString().split("T")[0] +
           " " +
           new Date().toLocaleTimeString([], {
@@ -68,12 +51,9 @@ export function AdminGalerie() {
             minute: "2-digit",
           }),
       }));
-      // uploadGalleryMedia(newPhotoFiles[0]);
-      createGallery({
-        url: newFileName,
-        title: photo[0].title,
-        category: photo[0].category,
-        type: photo[0].type || "photo",
+      uploadGalleryImages(newPhotoFiles, {
+        title: newPhotoTitle.trim() || "Nouvelle photo",
+        category: selectedCategory,
       });
       setPhotos([...photo, ...photos]);
       setNewPhotoFiles([]);
@@ -83,7 +63,7 @@ export function AdminGalerie() {
       setError("Veuillez remplir tous les champs.");
     }
   };
-  const fileChanged = async(event: React.ChangeEvent<HTMLInputElement>) => {
+  const fileChanged = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files
       ? Array.from(event.target.files)
       : [];
@@ -106,14 +86,12 @@ export function AdminGalerie() {
         const name = `Fichier_${new Date().getTime()}.${ext}`;
         return new File([file], name, { type: file.type });
       });
-      const t = await uploadGalleryMedia(renamedFiles[0]);
-      setNewFileName(t)
-
       setNewPhotoFiles(renamedFiles);
     }
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    await deleteGallery(id);
     setPhotos(photos.filter((photo) => photo.id !== id));
   };
 
@@ -125,9 +103,12 @@ export function AdminGalerie() {
     },
     {} as Record<Category, GetGallery[]>,
   );
-  const gal = useGallery();
 
-  console.log("gal: ", gal);
+  useEffect(() => {
+    if (dataGallery.length > 0) {
+      setPhotos(dataGallery);
+    }
+  }, [dataGallery]);
 
   return (
     <div>
@@ -136,7 +117,7 @@ export function AdminGalerie() {
           className="text-4xl mb-2"
           style={{ fontFamily: "'Playfair Display', serif", color: "#033720" }}
         >
-          Gestion de la Galerie {newFileName}
+          Gestion de la Galerie
         </h1>
         <p className="text-gray-600">Ajoutez et organisez vos photos</p>
       </div>
@@ -305,11 +286,12 @@ export function AdminGalerie() {
                 {categoryPhotos.map((photo) => (
                   <div key={photo.id} className="relative group">
                     {photo.type === "photo" ? (
-                    <img
-                      src={photo.url}
-                      alt={cat.label}
-                      className="w-full aspect-square object-cover rounded-xl"
-                    />):(
+                      <img
+                        src={photo.url}
+                        alt={cat.label}
+                        className="w-full aspect-square object-cover rounded-xl"
+                      />
+                    ) : (
                       <video
                         src={photo.url}
                         controls
@@ -318,14 +300,17 @@ export function AdminGalerie() {
                     )}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
                       <button
-                        onClick={() => handleDelete(photo.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDelete(photo.id);
+                        }}
                         className="p-3 bg-red-500 rounded-full hover:bg-red-600 transition-colors cursor-pointer"
                       >
                         <Trash2 size={20} color="white" />
                       </button>
                     </div>
                     <p className="text-xs text-gray-500 mt-2">
-                      {photo.uploadedAt}
+                      {formatDate(photo.uploaded_at)}
                     </p>
                   </div>
                 ))}

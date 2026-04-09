@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Masonry from "react-responsive-masonry";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { images } from "../assets";
 import { useGallery } from "../hooks/useGallery";
+import { GallerySkeleton } from "../components/figma/Loader";
 
 type Categorie = "all" | Category;
 
@@ -23,58 +23,8 @@ export function Galerie() {
     { id: "famille" as Categorie, label: "Famille" },
   ];
 
-  const photos: GetGallery[] = useGallery() || [
-    {
-      id: 1,
-      url: images.village,
-      category: "dote",
-      title: "Cérémonie traditionnelle",
-    },
-    { id: 2, url: images.couple3, category: "couple", title: "Joël & Claudia" },
-    {
-      id: 3,
-      url: images.couple2,
-      category: "couple",
-      title: "Portraits du couple",
-    },
-    {
-      id: 4,
-      url: "https://images.unsplash.com/photo-1634024319238-3f7c736255bc?w=800",
-      category: "famille",
-      title: "Famille réunie",
-    },
-    {
-      id: 5,
-      url: "https://images.unsplash.com/photo-1763368160924-abab3611ea3e?w=800",
-      category: "dote",
-      title: "Tenue traditionnelle",
-    },
-    {
-      id: 6,
-      url: images.miff_femme2,
-      category: "famille",
-      title: "Famille KOUATCHET",
-    },
-    { id: 7, url: images.couple, category: "couple", title: "Moment complice" },
-    {
-      id: 8,
-      url: images.miff_homme,
-      category: "famille",
-      title: "Famille ZAMA",
-    },
-    {
-      id: 9,
-      url: images.claudi4,
-      category: "soiree",
-      title: "Ambiance festive",
-    },
-    {
-      id: 10,
-      url: images.otele3,
-      category: "soiree",
-      title: "Musique et danse",
-    },
-  ];
+
+    const { data: photos, loading, error: dataError, refetch } = useGallery();
 
   const filteredPhotos =
     selectedCategory === "all"
@@ -154,7 +104,30 @@ export function Galerie() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <Masonry columnsCount={3} gutter="1rem">
-            {filteredPhotos.map((photo, index) => (
+            {loading ? (
+                      [...Array(3)].map((_, idx) => <GallerySkeleton key={idx} />)
+                    ) : dataError ? (
+                      <div className="flex flex-col items-center gap-4">
+                        <p className="text-center text-red-500">
+                          Erreur lors du chargement des photos. Veuillez réessayer.
+                        </p>
+            
+                        <button
+                          onClick={refetch}
+                          className="flex items-center gap-2 px-6 py-3 rounded-xl text-white transition-all hover:scale-105 cursor-pointer"
+                          style={{ backgroundColor: "#d8a21e" }}
+                        >
+                          <Plus size={20} />
+                          Rafraichir
+                        </button>
+                      </div>
+                    ) : filteredPhotos.length === 0 ? (
+                      <p className="text-center text-gray-500">
+                        Aucune photo pour le moment. Revenez bientôt !
+                      </p>
+                    ) : 
+            
+            filteredPhotos.map((photo, index) => (
               <motion.div
                 key={photo.id}
                 className="relative group cursor-pointer rounded-2xl overflow-hidden"

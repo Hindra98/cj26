@@ -4,8 +4,7 @@ import {
   MapPin,
   Users,
   Heart,
-  ArrowRight,
-  Search,
+  ArrowRight,Church, Music,
   X,
   Image as ImageIcon,
   LucideProps,
@@ -17,44 +16,346 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { JSX, useState } from "react";
 import CountDown from "../components/CountDown";
 import { images } from "../assets";
-interface Highlight{
-    title: string;
-    description: string;
-    icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
-    view: JSX.Element;
+interface Highlight {
+  title: string;
+  description: string;
+  icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >;
+  view: JSX.Element;
 }
 
-const Rencontre = () => 
-              <div className="space-x-3">
+  const events = [
+    {
+      date: "Jeudi 09 Avril 2026",
+      time: null,
+      title: "Mariage traditionnel (Dote)",
+      description: "Cérémonie traditionnelle unissant les familles KOUATCHET et ZAMA",
+      location: null,
+      icon: Calendar,
+      color: "#c95103",
+      image: images.miff_homme2,
+    },
+  ];
+
+  const saturdayEvents = [
+    {
+      time: "08h30",
+      title: "Mariage civil",
+      description: "Cérémonie officielle à la mairie",
+      location: "Mairie de Nkolbong",
+      sublocation: "Suivi d'un cocktail",
+      icon: Calendar,
+      color: "#033720",
+      image: images.couple3,
+    },
+    {
+      time: "14h30",
+      title: "Bénédiction nuptiale",
+      description: "Cérémonie religieuse",
+      location: "Paroisse St Thomas d'Aquin",
+      sublocation: "À Ange Raphael",
+      icon: Church,
+      color: "#cf6112",
+      image: images.couple,
+    },
+    {
+      time: "20h00",
+      title: "Soirée dansante",
+      description: "Célébration festive avec DJ et animations",
+      location: "Salle des fêtes de Japoma Cocotier",
+      sublocation: "Face école primaire Duchesne",
+      icon: Music,
+      color: "#d8a21e",
+      image: images.miff_homme,
+    },
+  ];
+
+
+const Rencontre = () => (
+  <div className="flex flex-col md:flex-row gap-4 items-start justify-between w-full">
+    <motion.div
+      className="aspect-square md:aspect-auto rounded-2xl overflow-hidden w-full"
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: 2 * 0.05 }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <ImageWithFallback
+        src={images.couple}
+        alt={`Joel & Claudia`}
+        className="w-full h-full object-cover"
+      />
+    </motion.div>
+    <motion.div
+      className="p-4 rounded-xl border border-gray-100 bg-gray-50 w-full h-auto"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay: 4 * 0.05 }}
+    >
+      <div className="space-y-2">
+        <h2 className="text-xl text-[#033720] font-medium">Coup de foudre</h2>
+        <p className="text-justify overflow-y-auto">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim suscipit
+          consequatur numquam praesentium voluptatum. Et at quia atque culpa
+          similique sequi officia doloremque nobis quibusdam tempore eum,
+          voluptatem, soluta sed. Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Enim suscipit consequatur numquam praesentium
+          voluptatum. Et at quia atque culpa similique sequi sed.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa neque dignissimos quis similique natus tempora temporibus doloremque odio dolor esse, a consequuntur harum aspernatur praesentium impedit nihil est eius nemo?
+        </p>
+      </div>
+    </motion.div>
+  </div>
+);
+
+const Reception = () => (
+  <div className="flex flex-col md:flex-row gap-4 items-start justify-between w-full">
+    <motion.div
+      className="aspect-square md:aspect-auto rounded-2xl overflow-hidden w-full"
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: 2 * 0.05 }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <ImageWithFallback
+        src={images.village}
+        alt={`Salle de reception de Japoma`}
+        className="w-full h-full object-cover"
+      />
+    </motion.div>
+    <motion.div
+      className="p-4 rounded-xl border border-gray-100 bg-gray-50 w-full h-auto"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay: 4 * 0.05 }}
+    >
+      <div className="space-y-2">
+        <h2 className="text-xl text-[#033720] font-medium">La plus belle salle de reception de Japoma</h2>
+        <p className="text-justify overflow-y-auto">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim suscipit
+          consequatur numquam praesentium voluptatum. Et at quia atque culpa
+          similique sequi officia doloremque nobis quibusdam tempore eum,
+          voluptatem, soluta sed. Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Enim suscipit consequatur numquam praesentium
+          voluptatum. Et at quia atque culpa similique sequi sed.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa neque dignissimos quis similique natus tempora temporibus doloremque odio dolor esse, a consequuntur harum aspernatur praesentium impedit nihil est eius nemo?
+        </p>
+      </div>
+    </motion.div>
+  </div>
+);
+
+const Programme = () => (
+  <div className="flex flex-col md:flex-row gap-4 items-start justify-between w-full">
+    <motion.div
+      className="aspect-square md:aspect-auto rounded-2xl overflow-hidden w-full"
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: 2 * 0.05 }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <ImageWithFallback
+        src={images.couple}
+        alt={`Joel & Claudia`}
+        className="w-full h-full object-cover"
+      />
+    </motion.div>
+    <motion.div
+      className="p-4 rounded-xl border border-gray-100 bg-gray-50 w-full h-auto"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay: 4 * 0.05 }}
+    >
+      <div className="space-y-2">
+        <h2 className="text-xl text-[#033720] font-medium">Coup de foudre</h2>
+        
+        {/* Jeudi - Mariage traditionnel */}
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          {events.map((event, index) => {
+            const Icon = event.icon;
+            return (
+              <div
+                key={index}
+                className="bg-white rounded-3xl shadow-xl overflow-hidden"
+              >
+                <div className="grid md:grid-cols-2">
+                  <div className="p-10 flex flex-col justify-center">
+                    <div
+                      className="inline-flex w-16 h-16 rounded-2xl items-center justify-center mb-6"
+                      style={{ backgroundColor: event.color }}
+                    >
+                      <Icon size={32} color="white" />
+                    </div>
+                    <p className="text-sm tracking-wider mb-2" style={{ color: event.color }}>
+                      {event.date}
+                    </p>
+                    <h2 className="text-4xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+                      {event.title}
+                    </h2>
+                    <p className="text-gray-600 text-lg">{event.description}</p>
+                  </div>
+                  <div
+                    className="h-80 md:h-full bg-cover bg-center"
+                    style={{ backgroundImage: `url('${event.image}')` }}
+                  ></div>
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
+
+        {/* Samedi - Timeline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="text-center mb-12">
+            <h2 className="text-4xl mb-2" style={{ fontFamily: "'Playfair Display', serif", color: '#033720' }}>
+              Samedi 11 Avril 2026
+            </h2>
+            <p className="text-gray-600">Une journée complète de célébrations</p>
+          </div>
+
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#033720] via-[#cf6112] to-[#d8a21e]"></div>
+
+            <div className="space-y-12">
+              {saturdayEvents.map((event, index) => {
+                const Icon = event.icon;
+                return (
                   <motion.div
-                className="aspect-square rounded-2xl overflow-hidden"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 2 * 0.05 }}
-                whileHover={{ scale: 1.05 }}
+                    key={index}
+                    className="relative pl-24"
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: index * 0.2 }}
                   >
-                <ImageWithFallback
-                  src={"https://images.unsplash.com/photo-1655682604826-7530b331b3e7?w=800"}
-                  alt={`Joel & Claudia`}
-                  className="w-full h-full object-cover"
-                />
+                    {/* Time badge */}
+                    <div
+                      className="absolute left-0 w-16 h-16 rounded-full flex items-center justify-center text-white border-4 border-white shadow-lg"
+                      style={{ backgroundColor: event.color }}
+                    >
+                      <span className="text-sm">{event.time}</span>
+                    </div>
+
+                    {/* Event card */}
+                    <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all">
+                      <div className="grid md:grid-cols-2">
+                        <div className="p-8">
+                          <div className="flex items-center gap-3 mb-4">
+                            <Icon size={24} style={{ color: event.color }} />
+                            <h3 className="text-3xl" style={{ fontFamily: "'Playfair Display', serif" }}>
+                              {event.title}
+                            </h3>
+                          </div>
+                          <p className="text-gray-600 mb-6">{event.description}</p>
+                          {event.location && (
+                            <div className="flex items-start gap-3 text-gray-700">
+                              <MapPin size={20} className="mt-1 flex-shrink-0" style={{ color: event.color }} />
+                              <div>
+                                <p className="font-medium">{event.location}</p>
+                                {event.sublocation && (
+                                  <p className="text-sm text-gray-500">{event.sublocation}</p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          className="h-64 md:h-full bg-cover bg-center"
+                          style={{ backgroundImage: `url('${event.image}')` }}
+                        ></div>
+                      </div>
+                    </div>
                   </motion.div>
-                  <motion.div
-                    className="p-4 rounded-xl border border-gray-100 bg-gray-50"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 4 * 0.05 }}
-                  >
-                     <div className="space-y-2">
-                      <h2 className="text-xl text-[#033720] font-medium">Coup de foudre</h2>
-                      <p className="text-justify">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim suscipit consequatur numquam praesentium voluptatum. Et at quia atque culpa similique sequi officia doloremque nobis quibusdam tempore eum, voluptatem, soluta sed.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim suscipit consequatur numquam praesentium voluptatum. Et at quia atque culpa similique sequi officia doloremque nobis quibusdam tempore eum, voluptatem, soluta sed.
-                      </p>
-                      </div> 
-                  </motion.div>
-              </div>;
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Info section */}
+        <motion.div
+          className="mt-20 bg-gradient-to-r from-[#033720] to-[#c95103] rounded-3xl p-12 text-white text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h3 className="text-3xl mb-4" style={{ fontFamily: "'Playfair Display', serif" }}>
+            Informations pratiques
+          </h3>
+          <p className="text-lg mb-2">Dress code : Tenue traditionnelle ou élégante</p>
+          <p className="text-lg">Couleurs du thème : Terra Cotta (tons chauds de terre)</p>
+        </motion.div>
+      </div>
+    </motion.div>
+  </div>
+);
+
+const Famille = () => (
+ <div className="flex flex-col md:flex-row gap-4 items-start justify-between w-full h-auto">
+    <motion.div
+      className="aspect-square md:aspect-auto rounded-2xl overflow-hidden w-full"
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: 2 * 0.05 }}
+      whileHover={{ scale: 1.05 }}
+    >
+      <ImageWithFallback
+        src={images.couple}
+        alt={`Joel & Claudia`}
+        className="w-full h-full object-cover"
+      />
+    </motion.div>
+    <motion.div
+      className="p-2 rounded-xl border border-gray-100 bg-gray-50 w-full h-full flex flex-col justify-between gap-4"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay: 4 * 0.05 }}
+    >
+      <div className="space-y-2">
+        <h2 className="text-xl text-[#033720] font-medium">La famille ZAMA</h2>
+        <p className="text-justify overflow-y-auto line-clamp-6">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim suscipit
+          consequatur numquam praesentium voluptatum. Et at quia atque culpa
+          similique sequi officia doloremque nobis quibusdam tempore eum,
+          voluptatem, soluta sed. Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Enim suscipit consequatur numquam praesentium
+          voluptatum. Et at quia atque culpa similique sequi sed.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa neque dignissimos quis similique natus tempora temporibus doloremque odio dolor esse, a consequuntur harum aspernatur praesentium impedit nihil est eius nemo?
+        </p>
+      </div>
+      <div className="space-y-2">
+        <h2 className="text-xl text-[#033720] font-medium">La famille KOUATCHET</h2>
+        <p className="text-justify overflow-y-auto line-clamp-6">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim suscipit
+          consequatur numquam praesentium voluptatum. Et at quia atque culpa
+          similique sequi officia doloremque nobis quibusdam tempore eum,
+          voluptatem, soluta sed. Lorem ipsum dolor sit amet consectetur
+          adipisicing elit. Enim suscipit consequatur numquam praesentium
+          voluptatum. Et at quia atque culpa similique sequi sed.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa neque dignissimos quis similique natus tempora temporibus doloremque odio dolor esse, a consequuntur harum aspernatur praesentium impedit nihil est eius nemo?
+        </p>
+      </div>
+    </motion.div>
+  </div>
+);
 
 export function Home() {
   const programmeCards = [
@@ -81,30 +382,30 @@ export function Home() {
     },
   ];
 
-  const highlights:Highlight[] = [
+  const highlights: Highlight[] = [
     {
       title: "Notre Histoire",
       description: "Découvrez comment Joël et Claudia se sont rencontrés",
       icon: Heart,
-      view: <Rencontre/>,
+      view: <Rencontre />,
     },
     {
       title: "Lieu de Réception",
       description: "Salle des fêtes de Japoma Cocotier",
       icon: MapPin,
-      view: <Rencontre/>,
+      view: <Reception />,
     },
     {
       title: "Programme Complet",
       description: "Tous les détails des événements",
       icon: Calendar,
-      view: <Rencontre/>,
+      view: <Programme />,
     },
     {
       title: "Les Familles",
       description: "Familles KOUATCHET & ZAMA",
       icon: Users,
-      view: <Rencontre/>,
+      view: <Famille />,
     },
   ];
 
@@ -115,7 +416,7 @@ export function Home() {
     images.couple,
   ];
 
-  const [selectedHighlight, setSelectedHighlight] = useState<number>(0);
+  const [selectedHighlight, setSelectedHighlight] = useState<number>(-1);
   // const img = URL.createObjectURL(images.couple);
 
   return (
@@ -191,15 +492,15 @@ export function Home() {
               <ImageIcon size={20} /> Voir la galerie
             </Link>
           </motion.div>
-          
+
           <motion.h3
             className="text-3xl md:text-5xl tracking-widest pt-10"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-          {CountDown()}
-        </motion.h3>
+            {CountDown()}
+          </motion.h3>
         </motion.div>
       </section>
 
@@ -298,7 +599,7 @@ export function Home() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
-                  onClick={()=>setSelectedHighlight(index)}
+                  onClick={() => setSelectedHighlight(index)}
                 >
                   <Icon
                     size={32}
@@ -372,16 +673,16 @@ export function Home() {
 
       {/* Modal Highlights Details */}
       <AnimatePresence>
-        {selectedHighlight>0 && selectedHighlight<5 && (
+        {selectedHighlight > -1 && selectedHighlight < 5 && (
           <motion.div
             className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedHighlight(0)}
+            onClick={() => setSelectedHighlight(-1)}
           >
             <motion.div
-              className="bg-white rounded-3xl p-8 max-w-md w-full max-h-[80vh] overflow-y-auto"
+              className="bg-white rounded-3xl p-8 md:max-w-3xl max-w-md  w-full max-h-[90vh] md:max-h-[70vh] overflow-hidden"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -398,13 +699,13 @@ export function Home() {
                   {highlights[selectedHighlight].title}
                 </h3>
                 <button
-                  onClick={() => setSelectedHighlight(0)}
+                  onClick={() => setSelectedHighlight(-1)}
                   className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
                 >
                   <X size={24} />
                 </button>
               </div>
-{highlights[selectedHighlight].view}
+              {highlights[selectedHighlight].view}
             </motion.div>
           </motion.div>
         )}

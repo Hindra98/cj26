@@ -270,7 +270,6 @@ export function AdminPosts() {
                       <video
                         width="120"
                         height="80"
-                        controls={false}
                         className="rounded-md shadow cursor-pointer h-20 object-cover"
                       >
                         <source src={image.url} type={image.type} />

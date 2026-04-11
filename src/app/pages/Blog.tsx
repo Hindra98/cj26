@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { useBlogPost } from "../hooks/useGallery";
 import { formatDate } from "../utils/wedding.func";
 import { PostSkeleton } from "../components/figma/Loader";
 import { Plus } from "lucide-react";
+import { useBlogPost } from "../hooks/useBlog";
 
 export function Blog() {
   const { data: posts, loading, error, refetch } = useBlogPost();

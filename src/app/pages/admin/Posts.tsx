@@ -1,21 +1,30 @@
 import { useEffect, useState } from "react";
 import { Plus, Edit, Trash2, Image as ImageIcon, X, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { images } from "../../assets";
-import { Select } from "../../components/figma/Input";
+import { Button, Select } from "../../components/figma/Input";
 import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
 import { formatDate } from "../../utils/wedding.func";
-import { useBlogPost } from "../../hooks/useGallery";
-import {
-  createPost,
-  deletePost,
-  updatePost,
-  uploadPostImages,
-} from "../../utils/blog.service";
 import { PostSkeleton } from "../../components/figma/Loader";
+import {
+  useBlogPost,
+  useDeleteBlogPost,
+  useUpdateBlogPost,
+} from "../../hooks/useBlog";
 
 export function AdminPosts() {
   const { data: dataPost, loading, error: dataError, refetch } = useBlogPost();
+  const {
+    data: dataUpdate,
+    loading: loadingUpdate,
+    error: updateError,
+    createPost,
+    updatePost,
+  } = useUpdateBlogPost();
+  const {
+    loading: loadingDelete,
+    error: deleteError,
+    removePost,
+  } = useDeleteBlogPost();
   const [posts, setPosts] = useState<GetPostDb[]>([]);
 
   const authors = [
@@ -77,8 +86,7 @@ export function AdminPosts() {
       })),
       created_at: new Date().toLocaleString(),
     };
-    const insert_post = await createPost(blogPostCommand);
-    uploadPostImages(insert_post.id, blogPostCommand.images);
+    await createPost(blogPostCommand);
     setPosts([post, ...posts]);
     setBlogPostCommand(defaultBlogPost);
     setShowCreateModal(false);
@@ -104,15 +112,14 @@ export function AdminPosts() {
           : [],
       created_at: new Date().toLocaleString(),
     };
-    const updated_post = await updatePost(blogPostCommand);
-    uploadPostImages(updated_post.id, blogPostCommand.images);
+    await updatePost(blogPostCommand);
     setPosts(posts.map((p) => (p.id === id ? post : p)));
     setBlogPostCommand(defaultBlogPost);
     setShowCreateModal(false);
   };
 
-  const handleDeletePost = (id: number) => {
-    deletePost(id)
+  const handleDeletePost = async (id: number) => {
+    await removePost(id);
     setPosts(posts.filter((post) => post.id !== id));
   };
 
@@ -449,7 +456,7 @@ export function AdminPosts() {
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-4">
-                  <button
+                  {/* <button
                     onClick={(e) => {
                       e.preventDefault();
                       setBlogPostCommand(defaultBlogPost);
@@ -472,7 +479,30 @@ export function AdminPosts() {
                     style={{ backgroundColor: "#033720" }}
                   >
                     Publier
-                  </button>
+                  </button> */}
+                  <Button
+                    className="border border-gray-200 hover:bg-gray-50"
+                    handleClick={() => {
+                      setBlogPostCommand(defaultBlogPost);
+                      setShowCreateModal(false);
+                    }}
+                  >
+                    Annuler
+                  </Button>
+                  <Button
+                    loading={!loadingUpdate}
+                    backgroundColor="#033720"
+                    className=" text-white"
+                    handleClick={() => {
+                      if (blogPostCommand.id && blogPostCommand.id > 0) {
+                        handleUpdatePost(blogPostCommand.id);
+                      } else {
+                        handleCreatePost();
+                      }
+                    }}
+                  >
+                    Publier
+                  </Button>
                 </div>
               </div>
             </motion.div>

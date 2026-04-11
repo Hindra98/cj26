@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 
-export const useGallery = () => {
-  const [datas, setData] = useState<GetGallery[]>([]);
+export const useBlogPost = () => {
+  const [datas, setData] = useState<GetPostDb[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
@@ -10,11 +10,11 @@ export const useGallery = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from("gallery")
-        .select(`*`)
-        .order("uploaded_at", { ascending: false });
+        .from("blog_posts")
+        .select(`*, blog_images(*)`)
+        .order("created_at", { ascending: false });
       if (error) throw error;
-      setData((data as GetGallery[]) || []);
+      setData((data as GetPostDb[]) || []);
     } catch (err) {
       setError(err);
     } finally {
@@ -28,18 +28,18 @@ export const useGallery = () => {
 
   return { data: datas, loading, error, refetch: fetchPosts };
 };
-export const useDeleteGallery = () => {
+export const useDeleteBlogPost = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
 
-  const removeGallery = async (id: number) => {
+  const removePost = async (id: number) => {
     try {
       setLoading(true);
       // 1. récupérer les médias
       const { data: media, error: mediaError } = await supabase
-        .from("gallery")
+        .from("blog_images")
         .select("url, type")
-        .eq("id", id);
+        .eq("post_id", id);
 
       if (mediaError) throw mediaError;
 
@@ -60,17 +60,17 @@ export const useDeleteGallery = () => {
             return url.pathname.split(`/videos/`)[1];
           });
 
-        console.log("image_paths", image_paths);
-        console.log("videos_paths", videos_paths);
-
         if (image_paths.length > 0)
           await supabase.storage.from("images").remove(image_paths);
         if (videos_paths.length > 0)
           await supabase.storage.from("videos").remove(videos_paths);
       }
 
-      // 3. supprimer post
-      await supabase.from("gallery").delete().eq("id", id);
+      // 3. supprimer media DB
+      await supabase.from("blog_images").delete().eq("post_id", id);
+
+      // 4. supprimer post
+      await supabase.from("blog_posts").delete().eq("id", id);
     } catch (error) {
       setError(error);
     } finally {
@@ -78,94 +78,77 @@ export const useDeleteGallery = () => {
     }
   };
 
-  return { loading, removeGallery, error };
+  return { loading, removePost, error };
 };
-export const useUpdateGallery = () => {
-  const [datas, setData] = useState<GetGallery | null>(null);
+export const useUpdateBlogPost = () => {
+  const [datas, setData] = useState<GetPostDb | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
-  
-  const uploadGalleryMedia = async (postId: number, files: File[]) => {
+
+  const uploadPostMedia = async (postId: number, files: File[]) => {
     try {
       let i = 1;
 
-  for (const file of files) {
-    const fileName = `${Date.now()}-${i}-${file.name}`;
-    i++;
-    const folder = file.type.includes("video") ? "videos" : "images";
-    await supabase.storage.from(folder).upload(`posts/${fileName}`, file);
-
-    const { data } = supabase.storage
-      .from(folder)
-      .getPublicUrl(`posts/${fileName}`);
-
-    await supabase.from("blog_images").insert({
-      post_id: postId,
-      url: data.publicUrl,
-      type: file.type.includes("video") ? "video" : "photo",
-    });
-  }
-    } catch (err) {
-      setError(err);
-    }
-  }
-
-  const createGallery = async (
-    files: File[],
-    payload: {
-      title: string;
-      category: Category;
-    },
-  ) => {
-    try {
-      setLoading(true);
-      let i = 1;
       for (const file of files) {
         const fileName = `${Date.now()}-${i}-${file.name}`;
         i++;
         const folder = file.type.includes("video") ? "videos" : "images";
-
-        await supabase.storage.from(folder).upload(`gallery/${fileName}`, file);
+        await supabase.storage.from(folder).upload(`posts/${fileName}`, file);
 
         const { data } = supabase.storage
           .from(folder)
-          .getPublicUrl(`gallery/${fileName}`);
+          .getPublicUrl(`posts/${fileName}`);
 
-        const { data: d, error } = await supabase
-          .from("gallery")
-          .insert({
-            url: data.publicUrl,
-            title: payload.title,
-            category: payload.category,
-            type: file.type.includes("video") ? "video" : "photo",
-          })
-          .select()
-          .single();
-        if (error) throw error;
+        await supabase.from("blog_images").insert({
+          post_id: postId,
+          url: data.publicUrl,
+          type: file.type.includes("video") ? "video" : "photo",
+        });
       }
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  const createPost = async (payload: BlogPostCommand) => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("gallery")
+        .insert({
+          content: payload.content,
+          author_name: payload.author_name,
+          author_role: payload.author_role,
+          author_avatar: payload.author_avatar,
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      setData((data as GetPostDb) || []);
+      await uploadPostMedia((data as GetPostDb).id, payload.images);
     } catch (err) {
       setError(err);
     } finally {
       setLoading(false);
     }
   };
-
-  const updateGallery = async (payload: GalleryCommand) => {
+  const updatePost = async (payload: BlogPostCommand) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
         .from("gallery")
         .update({
-          url: payload.url,
-          title: payload.title,
-          category: payload.category,
-          type: payload.type,
+          content: payload.content,
+          author_name: payload.author_name,
+          author_role: payload.author_role,
+          author_avatar: payload.author_avatar,
         })
         .eq("id", payload.id)
         .select()
         .single();
       if (error) throw error;
-      setData(data as GetGallery);
+      setData((data as GetPostDb) || []);
+      await uploadPostMedia((data as GetPostDb).id, payload.images);
     } catch (err) {
       setError(err);
     } finally {
@@ -173,5 +156,5 @@ export const useUpdateGallery = () => {
     }
   };
 
-  return { data: datas, loading, error, createGallery, updateGallery };
+  return { data: datas, loading, error, createPost, updatePost };
 };

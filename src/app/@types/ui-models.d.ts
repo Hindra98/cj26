@@ -1,5 +1,12 @@
 type Theme = "light" | "dark" | "system" | "default";
 
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+  className?:string;
+  backgroundColor?:string;
+  children: React.ReactNode;
+  handleClick: React.MouseEventHandler<HTMLButtonElement>;
+}
 interface SelectProps {
   items: SelectItemsProps[];
   name?: string;

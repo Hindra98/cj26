@@ -23,8 +23,7 @@ export function Galerie() {
     { id: "famille" as Categorie, label: "Famille" },
   ];
 
-
-    const { data: photos, loading, error: dataError, refetch } = useGallery();
+  const { data: photos, loading, error: dataError, refetch } = useGallery();
 
   const filteredPhotos =
     selectedCategory === "all"
@@ -103,51 +102,51 @@ export function Galerie() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <Masonry columnsCount={3} gutter="1rem">
-            {loading ? (
-                      [...Array(3)].map((_, idx) => <GallerySkeleton key={idx} />)
-                    ) : dataError ? (
-                      <div className="flex flex-col items-center gap-4">
-                        <p className="text-center text-red-500">
-                          Erreur lors du chargement des photos. Veuillez réessayer.
-                        </p>
-            
-                        <button
-                          onClick={refetch}
-                          className="flex items-center gap-2 px-6 py-3 rounded-xl text-white transition-all hover:scale-105 cursor-pointer"
-                          style={{ backgroundColor: "#d8a21e" }}
-                        >
-                          <Plus size={20} />
-                          Rafraichir
-                        </button>
-                      </div>
-                    ) : filteredPhotos.length === 0 ? (
-                      <p className="text-center text-gray-500">
-                        Aucune photo pour le moment. Revenez bientôt !
-                      </p>
-                    ) : 
-            
-            filteredPhotos.map((photo, index) => (
-              <motion.div
-                key={photo.id}
-                className="relative group cursor-pointer rounded-2xl overflow-hidden"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: index * 0.05 }}
-                onClick={() => handlePhotoClick(photo)}
-                whileHover={{ scale: 1.02 }}
+          {loading ? (
+            [...Array(3)].map((_, idx) => <GallerySkeleton key={idx} />)
+          ) : dataError ? (
+            <div className="flex flex-col items-center gap-4 col-span-3">
+              <p className="text-center text-red-500">
+                Erreur lors du chargement des photos. Veuillez réessayer.
+              </p>
+
+              <button
+                onClick={refetch}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl text-white transition-all hover:scale-105 cursor-pointer"
+                style={{ backgroundColor: "#d8a21e" }}
               >
-                <ImageWithFallback
-                  src={photo.url}
-                  alt={photo.title}
-                  className="w-full h-auto"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
-                  <p className="text-white p-4 text-lg">{photo.title}</p>
-                </div>
-              </motion.div>
-            ))}
-          </Masonry>
+                <Plus size={20} />
+                Rafraichir
+              </button>
+            </div>
+          ) : filteredPhotos.length === 0 ? (
+            <p className="text-center text-gray-500">
+              Aucune photo pour le moment. Revenez bientôt !
+            </p>
+          ) : (
+            <Masonry columnsCount={3} gutter="1rem">
+              {filteredPhotos.map((photo, index) => (
+                <motion.div
+                  key={photo.id}
+                  className="relative group cursor-pointer rounded-2xl overflow-hidden"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: index * 0.05 }}
+                  onClick={() => handlePhotoClick(photo)}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <ImageWithFallback
+                    src={photo.url}
+                    alt={photo.title}
+                    className="w-full h-auto"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
+                    <p className="text-white p-4 text-lg">{photo.title}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </Masonry>
+          )}
         </motion.div>
 
         {/* Modal */}

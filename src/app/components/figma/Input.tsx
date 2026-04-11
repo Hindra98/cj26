@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronsUpDown,PenBox } from "lucide-react";
+import { ChevronsUpDown, PenBox } from "lucide-react";
 import { Switch as ShadSwitch } from "../ui/switch";
 import { CJ_THEME, themeConstants } from "../../utils/constants";
+import { Loader } from "./Loader";
 
 export const Switch = ({
   name = "",
@@ -81,7 +82,6 @@ export const Select = ({
   );
 };
 
-
 interface ModeSelectorProps {
   onToggle?: (theme: Theme) => void;
   className: string;
@@ -95,7 +95,7 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
 }) => {
   // État local pour le thème. Initialisez-le par défaut à 'light'
   const [theme, setTheme] = useState<Theme>(
-    (localStorage.getItem(CJ_THEME) || themeConstants.LIGHT) as Theme
+    (localStorage.getItem(CJ_THEME) || themeConstants.LIGHT) as Theme,
   );
 
   // Appliquer le thème au `document` et sauvegarder la préférence
@@ -108,7 +108,7 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
     setTheme((prevTheme) =>
       prevTheme === themeConstants.LIGHT
         ? (themeConstants.DARK as Theme)
-        : (themeConstants.LIGHT as Theme)
+        : (themeConstants.LIGHT as Theme),
     );
 
     // Appelez la fonction de rappel si elle est fournie
@@ -194,5 +194,36 @@ export const ModeSelector: React.FC<ModeSelectorProps> = ({
         <span className="text-sm font-medium text-foreground">Dark</span>
       )}
     </div>
+  );
+};
+
+export const Button = ({
+  loading = false,
+  backgroundColor = "",
+  className = "",
+  children = "",
+  handleClick,
+  ...props
+}: ButtonProps) => {
+  const cl = `border-t-[${backgroundColor}]`;
+  return (
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        handleClick(e);
+      }}
+      className={`flex flex-1 items-center justify-center gap-2 px-4 py-2 rounded-xl transition-all hover:scale-105 cursor-pointer ${className}`}
+      style={{ backgroundColor: `${backgroundColor}` }}
+      disabled={loading}
+      {...props}
+    >
+      {loading && (
+        <div
+          className={`w-4 h-4 border-2 border-gray-300 rounded-full animate-spin`}
+          style={{ borderTopColor: `${backgroundColor}` }}
+        />
+      )}
+      {children}
+    </button>
   );
 };

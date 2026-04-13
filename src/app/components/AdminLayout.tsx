@@ -21,7 +21,7 @@ export function AdminLayout() {
         onClose={handleCloseMobile}
       />
 
-      <main className="flex-1 p-8 relative">
+      <main className={`flex-1 p-8 relative ${mobileOpen && "blur-sm"} ${collapsed ? "md:ml-16" : "md:ml-64"} transition-all duration-300`}>
         <button
           className={`md:hidden text-[#033720] bg-transparent rounded-md p-1 hover:bg-[#033720]/10 active:scale-90 shadow-xl transition-all cursor-pointer fixed top-1 left-1 ${mobileOpen && "hidden"}`}
             onClick={handleMobileToggle}>

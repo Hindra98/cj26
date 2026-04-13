@@ -137,7 +137,7 @@ export function Sidebar({
         onClick={onClose}
       />
       <aside
-        className={`bg-[#033720] text-white fixed h-screen md:relative inset-y-0 left-0 z-30
+        className={`bg-[#033720] text-white fixed top-0 left-0 h-screen inset-y-0 z-30
         ${collapsed ? "w-16" : "w-64 px-4"}
           transform transition-all duration-300
           ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}

@@ -135,11 +135,21 @@ export function Galerie() {
                   onClick={() => handlePhotoClick(photo)}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <ImageWithFallback
-                    src={photo.url}
-                    alt={photo.title}
-                    className="w-full h-auto"
-                  />
+                  {photo.type.includes("video") ? (
+                    <video
+                      controls
+                      className="w-full h-auto object-cover hover:scale-105 transition-transform"
+                    >
+                      <source src={photo.url} />
+                      Votre navigateur ne supporte pas la vidéo.
+                    </video>
+                  ) : (
+                    <ImageWithFallback
+                      src={photo.url}
+                      alt={photo.title}
+                      className="w-full h-auto"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end">
                     <p className="text-white p-4 text-lg">{photo.title}</p>
                   </div>
@@ -197,11 +207,22 @@ export function Galerie() {
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <img
-                  src={selectedPhoto.url}
-                  alt={selectedPhoto.title}
-                  className="w-auto h-full max-h-[80vh] rounded-2xl"
-                />
+                {selectedPhoto.type.includes("video") ? (
+                    <video
+                      controls
+                      autoPlay
+                      className="w-auto h-full max-h-[80vh] rounded-2xl"
+                    >
+                      <source src={selectedPhoto.url} />
+                      Votre navigateur ne supporte pas la vidéo.
+                    </video>
+                  ) : (
+                    <ImageWithFallback
+                      src={selectedPhoto.url}
+                      alt={selectedPhoto.title}
+                      className="w-auto h-full max-h-[80vh] rounded-2xl"
+                    />
+                  )}
                 <p className="text-white text-center mt-4 text-xl">
                   {selectedPhoto.title}
                 </p>

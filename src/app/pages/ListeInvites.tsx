@@ -16,13 +16,62 @@ export function ListeInvites() {
   const [selectedTable, setSelectedTable] = useState<TableName | null>(null);
 
   const guests: Guest[] = [
-    {
-      id: 1,
-      name: "Jean-Paul KOUATCHET",
-      table: "Miracle",
-      category: "mariee",
-    },
-    { id: 2, name: "Marie KOUATCHET", table: "Miracle", category: "mariee" },
+    { id: 2, name: "Mr/Mme GAMGA", table: "Paix", category: "mariee" },
+    { id: 2, name: "Mr/Mme NJEUTCHAM", table: "Paix", category: "mariee" },
+    { id: 2, name: "Mr/Mme EVA", table: "Paix", category: "mariee" },
+    { id: 2, name: "Mr/Mme AWA", table: "Paix", category: "mariee" },
+    { id: 2, name: "Mr TCHOUNDJA", table: "Paix", category: "mariee" },
+    { id: 2, name: "Mme MBAKAM", table: "Paix", category: "mariee" },
+
+    { id: 2, name: "Mr/Mme MBA", table: "Rejouissance", category: "mariee" },
+    { id: 2, name: "Mr/Mme NDIA", table: "Rejouissance", category: "mariee" },
+    { id: 2, name: "Mr/Mme FOTSING", table: "Rejouissance", category: "mariee" },
+    { id: 2, name: "Mr/Mme KOUADJIP", table: "Rejouissance", category: "mariee" },
+    { id: 2, name: "Mme TCHAPPI LOUISE", table: "Rejouissance", category: "mariee" },
+    { id: 2, name: "Mme DEPPO SOLANGE", table: "Rejouissance", category: "mariee" },
+
+    { id: 2, name: "Mr/Mme EBONGUE", table: "Douceur", category: "mariee" },
+    { id: 2, name: "Mr/Mme NJOKE", table: "Douceur", category: "mariee" },
+    { id: 2, name: "Mr/Mme KIARI", table: "Douceur", category: "mariee" },
+    { id: 2, name: "Mr/Mme PRISO", table: "Douceur", category: "mariee" },
+    { id: 2, name: "Mr/Mme NDOUMBE", table: "Douceur", category: "mariee" },
+
+    { id: 2, name: "Mr/Mme MOUSSIMA", table: "Humilite", category: "mariee" },
+    { id: 2, name: "Mr/Mme WONDJA", table: "Humilite", category: "mariee" },
+    { id: 2, name: "Mme KAMGA", table: "Humilite", category: "mariee" },
+    { id: 2, name: "Mr/Mme MONDOU", table: "Humilite", category: "mariee" },
+    { id: 2, name: "Mr/Mme TCHAPPI", table: "Humilite", category: "mariee" },
+    { id: 2, name: "Mme KAMGA LARISSA", table: "Humilite", category: "mariee" },
+
+    { id: 2, name: "Mr/Mme TODOUM", table: "Pardon", category: "mariee" },
+    { id: 2, name: "Mr/Mme NGOKO", table: "Pardon", category: "mariee" },
+    { id: 2, name: "Mr/Mme SOH", table: "Pardon", category: "mariee" },
+    { id: 2, name: "Mr/Mme NAOUSSI", table: "Pardon", category: "mariee" },
+    { id: 2, name: "Mme MAGNE AVELINE", table: "Pardon", category: "mariee" },
+    { id: 2, name: "Mme FANDJO BRIGITTE", table: "Pardon", category: "mariee" },
+
+    { id: 2, name: "Mr/Mme KAMKOUIMO", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mr/Mme MONKAM", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mr/Mme SAS", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mr/Mme ADELINE", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mme POUOMEGNE", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mme MAGNI MARIE", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mme KAMGA", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mme NJIKE", table: "Priere", category: "mariee" },
+    { id: 2, name: "Mme KAMGA", table: "Priere", category: "mariee" },
+
+    { id: 2, name: "Mlle NENBA BETTY", table: "Benediction", category: "mariee" },
+    { id: 2, name: "Mlle WANDJI ANGE", table: "Benediction", category: "mariee" },
+    { id: 2, name: "Mlle DJOU GLORIA", table: "Benediction", category: "mariee" },
+    { id: 2, name: "Mlle SUFO HERMINE", table: "Benediction", category: "mariee" },
+    { id: 2, name: "Mlle TSAFACK LINDA", table: "Benediction", category: "mariee" },
+
+    { id: 2, name: "Mme FANDJO BRIGITTE", table: "Fidelite", category: "mariee" },
+    { id: 2, name: "Mme FANDJO BRIGITTE", table: "Patience", category: "mariee" },
+    { id: 2, name: "Mme FANDJO BRIGITTE", table: "Foi", category: "mariee" },
+
+
+
     { id: 3, name: "Pierre ZAMA", table: "Esperance", category: "marie" },
     { id: 4, name: "Sophie ZAMA", table: "Esperance", category: "marie" },
     { id: 5, name: "Ambassadeur MBARGA", table: "Fidelite", category: "vip" },

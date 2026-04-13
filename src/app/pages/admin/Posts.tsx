@@ -266,13 +266,12 @@ export function AdminPosts() {
               {post.blog_images && post.blog_images?.length > 0 && (
                 <div className="flex gap-2 flex-wrap">
                   {post.blog_images?.map((image, idx) =>
-                    image.type === "video" ? (
+                    image.type.includes("video") ? (
                       <video
-                        width="120"
-                        height="80"
-                        className="rounded-md shadow cursor-pointer h-20 object-cover"
+                      controls
+                        className="rounded-md shadow cursor-pointer h-36 w-auto min-w-24 object-cover"
                       >
-                        <source src={image.url} type={image.type} />
+                        <source src={image.url} />
                         Votre navigateur ne supporte pas la vidéo.
                       </video>
                     ) : (
@@ -280,7 +279,7 @@ export function AdminPosts() {
                         key={idx}
                         src={image.url}
                         alt={`Post ${idx + 1}`}
-                        className="w-24 h-24 object-cover rounded-lg"
+                        className="w-36 h-36 object-cover rounded-lg"
                       />
                     ),
                   )}
